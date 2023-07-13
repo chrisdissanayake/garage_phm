@@ -1,0 +1,35 @@
+Package: gdphm
+Title: Garage Door Phm
+Version: 2022.02.0
+Authors@R: 
+    c(person(given = "Chris",
+             family = "Dissanayake",
+             role = c("aut", "cre"),
+             email = "chrisdissanayake99@gmail.com",
+             comment = c(ORCID = " 0000-0002-4287-5740 ")))
+URL: https://somewhere_in_sea_gitab/
+Depends: 
+    R (>= 4.0.0)
+Imports:
+    tidyverse,
+    gridExtra,
+    data.table,
+    lubridate,
+    janitor,
+    scales,
+    plotly,
+    patchwork,
+    ggforce,
+    MSwM,
+    Hmisc,
+    hht, 
+    zoo
+Remotes:
+    local::/pkgs/
+Encoding: UTF-8
+SystemRequirements: FFmpeg (>= 3.2); with at least libx264 and lame (mp3)
+    drivers. Debian/Ubuntu: libavfilter-dev, Fedora/CentOS: ffmpeg-devel
+    (via https://rpmfusion.org), MacOS Homebrew: ffmp
+
+
+

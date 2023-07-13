@@ -1,0 +1,96 @@
+# Introduction {.unnumbered}
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+library(reticulate)
+
+```
+[Work in Progress]{style="color: red; font-size: 20px;"}
+
+Welcome to the documentation for the “Garage Door Prognostics” project.
+
+The sections are arranged by functionality. 
+
+## System Configuration
+
+
+![ ](./images_for_document/ptype.jpg){width="49.7%" fig-align="center"}
+
+
+```{mermaid}
+graph TB
+A(Accelerometer)-->AA 
+
+subgraph Replace
+AA[Arduino]-->E[Thin Client]
+style Replace fill:#f0f0f0,stroke:grey,stroke-width:2px
+end
+
+E-->F[AWS RDS]
+F-->G(Dashboard </br>Metrics, Sensor, Data Decisions)
+F-->H[Decision Making]
+H-->G
+GD(Garage Door) -.-> A
+M(Calibration) -.-> A
+style A fill:#B6E6E6
+style GD fill:salmon 
+style E stroke:blue,stroke-width:3px
+
+subgraph Thin-Client
+BB((Every </br> 2 Hours))-->CA[Gather Data]
+CA-->CAA
+BB-->CAA[Preprocess]
+CAA-->CAAB{Door Activity?}
+CAAB--Yes-->CBB[Run Models]
+CAAB--No-->CAAC(End)
+CBB-->CB[Data / Results]
+style BB fill:salmon 
+style Thin-Client fill:#f0f0f0,stroke:blue,stroke-width:3px
+end
+
+```
+
+
+## Note on Code Folding
+
+I will leave the code blocks open by default, but there will be instances where code folding would warrant. If this is the case, you could easily unfold them by clicking an arrow above the output. 
+
+Here is an example:
+
+```{r}
+#| code-fold: true
+mtcars |> 
+  ggplot(aes(disp, mpg, col = factor(cyl))) +
+  geom_point() +
+  labs(title = "mpg vs dispacement", 
+       col = "number of cylinders") 
+```
+
+## Session Information 
+
+```{r pkg-list, echo = FALSE}
+deps <- desc::desc_get_deps()
+pkgs <- sort(deps$package[deps$type == "Imports"])
+pkgs <- sessioninfo::package_info(pkgs, dependencies = FALSE)
+df <- tibble::tibble(
+  package = pkgs$package,
+  version = pkgs$ondiskversion,
+  source = pkgs$source
+) |> 
+  dplyr::mutate(
+    source = stringr::str_split(source, " "),
+    source = purrr::map_chr(source, ~ .x[1]),
+    info = paste0(package, " (", version, ", ", source, ")")
+    )
+pkg_info <- knitr::combine_words(df$info)
+```
+
+This document was created with `r R.version.string` using the following packages: `r pkg_info`. 
+
+
+
+The Python version is `r reticulate::py_version()` and the installed packages are: `r reticulate::py_list_packages() |> dplyr::mutate(info = paste0("(",package, version,")")) |> dplyr::pull(info) |> paste(collapse = ", ")`.
+
+
+The Rust version is `r `

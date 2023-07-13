@@ -1,0 +1,29 @@
+# Optimize Location
+
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+
+```
+
+# Problem
+
+
+```{r}
+# write_csv(d_fmerg_final,"../data/gd_hm-1_ppr.csv")
+
+d_fmerg_final <- read_rds("../data/gd_hm-1_ppr.csv")
+
+d_fmerg_final |> 
+  pivot_longer(c(x, y, z)) |> 
+  ggplot(aes(time, value, col = as.factor(recipe_step))) +
+  geom_point(alpha = 0.2, size = 0.4) +
+  facet_wrap(~name, ncol = 1) +
+  labs(x ="time (ms)", 
+       y = "g-force (ms-2)", 
+       col = "recipe step")
+
+
+```
+

@@ -1,0 +1,29 @@
+project:
+  type: book
+
+execute: 
+  warning: false
+  
+book:
+  title: "Garage Door Prognostics and Health Management"
+  author: "Chris Dissanayake"
+  date: today
+  chapters:
+    - index.qmd
+    - calibration.qmd
+    - preprocessing.qmd
+    - model_arm_brkt.qmd
+    - datacollection.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+    code-fold: false
+    code-summary: "Code"
+  pdf:
+    documentclass: scrreprt
+
+

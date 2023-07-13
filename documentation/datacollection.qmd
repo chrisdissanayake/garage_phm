@@ -1,0 +1,119 @@
+# Query Data 
+
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+
+library(DBI)
+library(RPostgres)
+
+```
+
+Data is stored in two AWS RDS databases. Please let me know if you have lost the credentials.
+
+1. gd_phm_status : This has the model output information, hardware maintenance information, versioning, and configuration settings. 
+
+2. metrics : This hosts accuracy and reliability metrics for all my projects. The table for this project is called "gd_phm".
+
+
+Shown below is a generic sequence of how one might pull data.
+
+## Make a Connection
+
+```{r}
+con <- dbConnect(
+  RPostgres::Postgres(),
+  dbname = "gd_phm_status",
+  host = Sys.getenv("gd_db_host"),
+  port = 5432,
+  user = Sys.getenv("gd_db_user"),
+  password = Sys.getenv("gd_db_pw")
+)
+```
+
+## Get Relevant Table Names
+
+```{r}
+tbl <- DBI::dbGetQuery(
+  conn = con,
+  "SELECT table_name
+  FROM information_schema.tables
+  WHERE table_name like '%gd%'
+"
+)
+
+tbl |> pull(table_name) |> cat(sep = ", ")
+```
+
+## Pull Data
+
+```{r}
+tbl <- DBI::dbGetQuery(
+  conn = con,
+  
+  "WITH joined_tbl AS (
+    SELECT
+      gd_config_hw_tbl.*,
+      meas_date,
+      meas_seq,
+      status,
+      gd_meas_tbl.model AS model,
+      prob,
+      model_version,
+      version_from,
+      version_to
+    FROM gd_config_hw_tbl
+    INNER JOIN gd_meas_tbl
+      ON (gd_config_hw_tbl.location_id = gd_meas_tbl.location_id)
+    INNER JOIN gd_config_models_tbl
+      ON (
+        gd_config_hw_tbl.location_id = gd_config_models_tbl.location_id AND
+        gd_meas_tbl.model = gd_config_models_tbl.model
+         )
+    )
+  
+  SELECT
+    state,
+    city_code,
+    location_id,
+    model,
+    model_version,
+    meas_date,
+    MAX(prob) AS prob_max
+  FROM joined_tbl
+  WHERE (meas_date >= version_from AND ((version_to IS NULL) OR meas_date <= version_to))
+  GROUP BY state, city_code, location_id, model, model_version, meas_date;"
+)
+
+tbl |> head(10)
+
+```
+
+
+## Plot Data
+
+```{r}
+tbl |> 
+  filter(meas_date < as.Date("2023-06-11")) |> 
+  mutate(model = ifelse(model == "arm_brkt", "Arm Bracket Fault", model)) |> 
+  ggplot(aes(meas_date, prob_max, col = model_version)) +
+  geom_point() +
+  facet_grid(location_id~ model, scales = "free") +
+  scale_x_date(date_breaks = "2 weeks") +
+  labs(
+    title = "Daily Maximum Fault Probability for Each IoT Device Monitored Against Model Version", 
+    x = "Date", 
+    y = "Fault Probability",
+    col = "Model Version"
+      )
+```
+
+## Important! 
+
+Please close the connection after you are done. 
+
+```{r}
+dbDisconnect(con)
+```
+

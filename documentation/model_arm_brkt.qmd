@@ -1,0 +1,259 @@
+# Arm Bracket Fault Detection
+
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+
+```
+
+## Hilbert Huang Transform
+
+```{r}
+imf_ener <- function(tbl, meas_fn = "x") {
+  sig <- tbl %>% pull({{ meas_fn }})
+  tt <- tbl %>% pull(new_sensor_dt)
+  
+  inputimfs <-  Sig2IMF(sig, tt, max.imf = 3)$imf # note max IMF 
+  n_cols <- ncol(inputimfs)
+  n_rows <- nrow(inputimfs)
+  if (is.null(n_cols)) return(tibble())
+  # mse_hilbert = sum(inputimfs[,1]^2)/n_rows
+  # ek = NULL
+  # for (i in 1:n_cols) ek <- c(ek, mse_hilbert*2.01^(-i)/0.719) # https://link.springer.com/chapter/10.1007/978-3-030-89010-0_8
+  #
+  
+  # sample_ek = NULL
+  # for (i in 1:n_cols) sample_ek <- c(sample_ek, sum(inputimfs[,i]^2)/n_rows)
+  
+  sample_ek <- apply(inputimfs, 2, function(x){sum(x^2)/n_rows})
+  
+  tibble(n = 1:n_cols 
+         # "ek" = ek
+  ) %>% 
+    mutate(
+      log_eek = log(sample_ek)/log(2)
+    ) %>% 
+    return()
+}
+```
+
+## Fit HMM
+
+```{r}
+get_mm_results <- function(tf_loc_id, meas_fn) {
+  .create_objects_for_model <- function(tf_loc_id, meas_fn) {
+    tf_loc_id <- tf_loc_id %>%
+      unnest(gi) %>% 
+      ungroup()
+    
+    tf_loc_id <- tf_loc_id %>% 
+      unnest(str_glue("ie_{meas_fn}")) %>% 
+      select(id, rs_start, n, log_eek, {{ meas_fn }}) %>%
+      filter(n() >= 2) %>% 
+      pivot_wider(values_from = log_eek, names_from = n) %>%
+      drop_na(`1`, `2`)
+      
+      fml = str_glue("{meas_fn} ~ `2`") %>% formula()
+      
+      list(tf_loc_id = tf_loc_id, fml = fml)
+  } 
+  
+  .create_mm_model <- function(model_obj) {
+    n <- labels(terms(model_obj$fml)) %>% length() 
+    
+    ms_ols_model <- lm(formula = model_obj$fml,
+                       data  = model_obj$tf_loc_id) 
+    
+    ms_model <- msmFit(ms_ols_model,
+                       k = 2,
+                       p = 0,
+                       sw = rep(TRUE, n + 2), 
+                       control = list(trace = FALSE, parallelization = TRUE))
+  }
+  
+  .process_mm_model <- function(model_obj, ms_model, meas_fn) {
+    smoTransMatrob <- model_obj$tf_loc_id %>%  
+      select(id, rs_start, {{ meas_fn }}) %>% add_row(id = NA,  .before = 1) %>%
+      cbind(. ,ms_model@Fit@smoProb)
+    
+    fault_regime <- get_fault_regime(smoTransMatrob, meas_fn)
+    
+    list(smoTransMatrob = smoTransMatrob,
+         smoTransMat = ms_model@Fit@smoTransMat, 
+         k = ms_model@k, 
+         fault_regime = fault_regime)
+  }
+  
+  model_obj <- .create_objects_for_model(tf_loc_id, meas_fn)
+  ms_model <- .create_mm_model(model_obj)
+  
+  .process_mm_model(model_obj, ms_model, meas_fn)
+}
+
+
+get_model_status <- function(loc_id, 
+                                  model_code,
+                                  print_error = TRUE,
+                                  model = "mm_arm_brkt",
+                                  object = "smoTransMatrob") {
+  
+  .print_err <- function(message = "Error", print_error = TRUE){
+    if (print_error) print(str_glue("{message} in {loc_id}")) 
+    return(NULL) 
+  }
+  
+  models_tool %>%
+    pull({{ model }}) %>% 
+    pluck(1, object) %||% .print_err(print_error = print_error)
+}
+
+
+model_status_defs <- function(type) {
+  switch(type,
+         "named list" = NA, # success
+         "list" = NA, # missing in configuration
+         "lgl" = "Error" # processing error
+  )
+}
+
+
+get_fault_regime <- function(smoTransMatrob, meas_fn = "x" ) {
+  regime_corr <- smoTransMatrob %>% 
+    select({{ meas_fn }}, `1`, `2`) %>% 
+    round(5) %>% 
+    cor(use = "complete.obs")
+  
+  which.max(regime_corr[1, 2:3]) 
+}
+
+
+get_model_fails <- function(path, loc_id, prob_thres, daysback, model, meas_fn, faults_only = TRUE) {
+  subset_dummy <- list()
+  
+  for (loc_id in loc_ids) {
+    
+    models_tool <- readRDS(file = str_glue("{path}/models/model_object_{loc_id}.rds")) 
+    
+    smoTransMatrob <- get_model_status(loc_id,
+                                            models_tool,
+                                            print_error = FALSE, 
+                                            model = str_glue("mm_{model}_{meas_fn}"),
+                                            object = "smoTransMatrob") %||% next
+    fault_regime <- get_model_status(loc_id,
+                                          models_tool,
+                                          print_error = FALSE, 
+                                          model = str_glue("mm_{model}_{meas_fn}"),
+                                          object = "fault_regime") %||% next
+    
+    smoTransMatrob <- smoTransMatrob %>% 
+      mutate(tool_name = loc_id,
+             fault_prob =!!as.symbol(fault_regime), 
+             fault_prob = round(fault_prob, 5)) %>% 
+      filter(rs_start > Sys.Date() - daysback)
+    
+    if (faults_only) {
+      smoTransMatrob <- smoTransMatrob %>% filter(fault_prob >= {{ prob_thres }})  
+    }
+    
+    subset_dummy[[loc_id]] <- smoTransMatrob %>% 
+      select(tool_name, id, {{ meas_fn }}, rs_start, fault_prob)
+    
+  }
+  
+  do.call(rbind, subset_dummy) %>% remove_rownames() 
+}
+```
+
+## Evaluate Fit
+
+```{r}
+retrieve_model_obj <- function(path, loc_id, model, meas_fn) {
+  
+  models_tool <- readRDS(file = str_glue("{path}/models/model_object_{loc_id}.rds")) 
+  
+  smoTransMatrob <- get_model_status(loc_id,
+                                          models_tool,
+                                          print_error = FALSE, 
+                                          model = str_glue("mm_{model}_{meas_fn}"), 
+                                          object = "smoTransMatrob")
+  smoTransMat <- get_model_status(loc_id,
+                                       models_tool, 
+                                       print_error = FALSE, 
+                                       model = str_glue("mm_{model}_{meas_fn}"),
+                                       object = "smoTransMat")
+  fault_regime <- get_model_status(loc_id,
+                                        models_tool,
+                                        print_error = FALSE, 
+                                        model = str_glue("mm_{model}_{meas_fn}"),
+                                        object = "fault_regime")
+  k <- get_model_status(loc_id,
+                             models_tool,
+                             print_error = FALSE, 
+                             model = str_glue("mm_{model}_{meas_fn}"),
+                             object = "k")
+  
+  list(smoTransMatrob = smoTransMatrob,
+       smoTransMat = smoTransMat, 
+       k = k, 
+       fault_regime = fault_regime)
+}
+
+
+filter_fault_freq <- function(tbl, number_of_fails) {
+  tbl %>%   
+    mutate(number_of_fails = n()) %>% 
+    filter(number_of_fails >=!!number_of_fails) 
+}
+
+filter_fault_freq_group <- function(tbl, groups = c("fac", "tool_name"), number_of_fails) {
+  tbl %>%
+    group_by(across(all_of(groups))) %>% 
+    filter_fault_freq(number_of_fails) %>%
+    distinct(across(all_of(groups)))
+}
+```
+
+
+## Chapman-Kolmogorov 
+
+```{r}
+calc_trans_mat <- function(path, loc_id, model, meas_fn, t_steps = 1L) {
+  model_obj <- retrieve_model_obj(path, loc_id, model, meas_fn)
+  
+  smoTransMatrob <- model_obj$smoTransMatrob %>% select(`1`, `2`) 
+  smoTransMat <- model_obj$smoTransMat
+  k <- model_obj$k
+  fault_regime <- model_obj$fault_regime
+  
+  gamma_t_s <- matrix(apply(matrix(unlist(smoTransMat),nrow = k*k),1,sum)/rep(apply(smoTransMatrob[-1,],2,sum),rep(k,k)),ncol = k)
+  dimnames(gamma_t_s) <- switch(fault_regime, "1" = rep(list(c("Fault", "Stable")),2), "2" = rep(list(c("Stable", "Fault")),2))
+  
+  if (t_steps <= 2) return(gamma_t_s)
+  
+  gamma_t <- matrix(apply(matrix(unlist(smoTransMat[1:t_steps]),nrow = k*k),1,sum)/rep(apply(head(smoTransMatrob[-1,], t_steps),2,sum),rep(k,k)),ncol = k)
+  
+  gamma_s <- gamma_t_s %*% MASS::ginv(gamma_t)
+  gamma_s <- abs(kronecker(gamma_s, k-1)) # This should hold true for MP invertibility
+  gamma_s <- t(t(gamma_s) / apply(gamma_s, 2, sum))
+  dimnames(gamma_s) <- switch(fault_regime, "1" = rep(list(c("Fault", "Stable")),2), "2" = rep(list(c("Stable", "Fault")),2))
+  
+  .check_topmap <- function(gamma_s) {
+    evec <- eigen(gamma_s)$vectors
+    t(evec[, 1]) %*% evec[, 2] <= abs(evec[, 1]) %*% abs(evec[, 2])
+  }
+  
+  .check_statdist <- function(gamma_x) {
+    m <- dim(gamma_x)[1]
+    stat_dist <- matrix(1, 1, m) %*% solve(diag(1, m) - gamma_x + matrix(1, m, m))
+    
+    all.equal(eigen(gamma_x)$values, as.vector(stat_dist)) < sqrt(.Machine$double.eps)
+  }
+  
+  if (!.check_topmap(gamma_s) | .check_statdist(gamma_s)) return(gamma_t_s)
+  
+  gamma_s
+}
+
+```
+
