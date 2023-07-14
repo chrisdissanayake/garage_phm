@@ -8,7 +8,7 @@ source("_common.R")
 
 # Signal Data
 
-The function that we will use to do the initial cleaning: 
+The function for initial data cleaning: 
 
 ```{r}
 pre_proc_tbl <- function(file_name) {
@@ -45,9 +45,7 @@ plot_ad <- function(tbl) {
 ```
 
 
-Here is what a generic signal looks like for one complete cycle. 
-
-**Note:** The measurement units are in g's, but I will keep the designation as "value" since I am not using this explicitly. 
+Here is what a signal looks like for one complete cycle (please look at the landing page for the definition). 
 
 ```{r}
 d <- pre_proc_tbl("2023-06-10_garagedoor-1") 
@@ -58,37 +56,14 @@ d |>
 
 ```
 
-The x and y signals have similar dynamics. 
-
-When the door moves about the corner track, the accelerometer tilts at a constant rate. This constant rate of tilt would lead to exponentially decaying or growing solutions, which is consistent to the above signal.
-
-The tilt of the garage door, denoted by \(\theta(t)\) can be expressed by a the following first order differential equation:
-
-$$
-\frac{d\theta}{dt} = f(\theta, G, t)\
-$$
-
-where \(f(\theta, G, t)\) represents the function describing the dynamics of the garage door, and G is the geometry of the system.  
-
-
-For the simplest case of tilting about the origin (ignoring the geometry),
-
-$$
- \frac{d\theta}{dt} =\dot{\theta}\ = \theta 
-$$
-the solution is: 
-
-$$
-\theta \ =  e^t
-$$
 
 # Median Filter 
 
-The data has irregular spike patterns caused by the movement of the curved door arm. These serve no purpose other than to contaminate the signal, and therefore are removed. 
+The data has irregular spike patterns caused by the movement of the curved door arm. These serve no purpose other than to contaminate the signal, and therefore are removed using a simple filter. 
 
-### Test Filter
+### Verify Filter
 
-The goal here is to simulate data with known spikes to verify the filter.
+Verify the filter with simulated data with known spikes:
 
 ```{r}
 set.seed(123)
@@ -118,6 +93,8 @@ d_med |> ggplot(aes(t, value)) +
 ```
 
 ### Filter Data
+
+The choice of n should be the minimum odd value that will produce the final segmentation on the baseline signal.
 
 ```{r}
 d <- d |> mutate(across(c(x, y, z), ~mmed(x = ., n = 5)))
@@ -149,7 +126,7 @@ d |>
 
 ## Extract Torsion Coil Response
 
-I am using a machine learning method to isolate the up and down tilts (slopes), which are the torsion coil unwinding and winding scenarios. 
+I am using a machine learning method to isolate the torsion coil unwinding and winding scenarios. 
 
 ```{python}
 import statsmodels.api as sm1
@@ -260,15 +237,12 @@ d_fmerg |>
 Here is the nomenclature:
 
 - 0 =  horizontal or vertical position
-
 - -1 =  torsion coil winding 
-
 - 1 = torsion coil unwinding
-
 
 ## Extract Door Idle Response
 
-The door can be idle up or down, and I am fitting a simple dependent mixture model next.
+To extract information about whether the door is idle up or down, a simple dependent mixture model is used.
 
 ```{r}
 library(depmixS4)
@@ -296,10 +270,7 @@ d_fmerg_final <- d_fmerg |>
   mutate(numbers = n(),
          bin_hmm = ifelse(n() < 2000 , "Transition", bin_hmm)) |> 
   mutate(recipe_step = paste(bin_hmm, bin))
-
 ```
-
-In this example, you could see the unwinding the torsion coil (pink, door going up) generates a distinct signature compared to the opposite direction (green, door coming down).
 
 ```{r}
 d_fmerg_final |>
@@ -311,5 +282,32 @@ d_fmerg_final |>
        y = "Acceleration (g)",
        col = "Recipe Step")
 ```
+
+The unwinding the torsion coil (pink, door going up) generates a distinct signature compared to the opposite direction (green, door coming down).
+
+The shape of the signal comes from a constant rate of tilt around the corner track, which lead to exponentially decaying or growing solutions, consistent with the above signal.
+
+The tilt of the garage door, denoted by \(\theta(t)\) can be expressed by a the following first order differential equation:
+
+$$
+\frac{d\theta}{dt} = f(\theta, G, t)\
+$$
+
+where \(f(\theta, G, t)\) represents the function describing the dynamics of the garage door, and G is the geometry of the system.  
+
+
+For the simplest case of tilting about the origin (ignoring the geometry),
+
+$$
+ \frac{d\theta}{dt} =\dot{\theta}\ = \theta 
+$$
+the solution is: 
+
+$$
+\theta \ =  e^t
+$$
+
+
+
 
 

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Garage Door Prognostics and Health Management - 3&nbsp; Arm Bracket Fault Detection</title>
+<title>Garage Door Prognostics and Health Management - 4&nbsp; Arm Bracket Fault Detection</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -108,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./model_arm_brkt.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Arm Bracket Fault Detection</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./model_arm_brkt.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Arm Bracket Fault Detection</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -141,26 +141,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./bom.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bill of Materials</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./calibration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Calibration</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calibration</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./preprocessing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Preprocessing Methods</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Preprocessing Methods</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./model_arm_brkt.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Arm Bracket Fault Detection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Arm Bracket Fault Detection</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./datacollection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Query Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -179,10 +185,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#hilbert-huang-transform" id="toc-hilbert-huang-transform" class="nav-link active" data-scroll-target="#hilbert-huang-transform"><span class="header-section-number">3.1</span> Hilbert Huang Transform</a></li>
-  <li><a href="#fit-hmm" id="toc-fit-hmm" class="nav-link" data-scroll-target="#fit-hmm"><span class="header-section-number">3.2</span> Fit HMM</a></li>
-  <li><a href="#evaluate-fit" id="toc-evaluate-fit" class="nav-link" data-scroll-target="#evaluate-fit"><span class="header-section-number">3.3</span> Evaluate Fit</a></li>
-  <li><a href="#chapman-kolmogorov" id="toc-chapman-kolmogorov" class="nav-link" data-scroll-target="#chapman-kolmogorov"><span class="header-section-number">3.4</span> Chapman-Kolmogorov</a></li>
+  <li><a href="#hilbert-huang-transform" id="toc-hilbert-huang-transform" class="nav-link active" data-scroll-target="#hilbert-huang-transform"><span class="header-section-number">4.1</span> Hilbert Huang Transform</a></li>
+  <li><a href="#fit-hmm" id="toc-fit-hmm" class="nav-link" data-scroll-target="#fit-hmm"><span class="header-section-number">4.2</span> Fit HMM</a></li>
+  <li><a href="#evaluate-fit" id="toc-evaluate-fit" class="nav-link" data-scroll-target="#evaluate-fit"><span class="header-section-number">4.3</span> Evaluate Fit</a></li>
+  <li><a href="#chapman-kolmogorov" id="toc-chapman-kolmogorov" class="nav-link" data-scroll-target="#chapman-kolmogorov"><span class="header-section-number">4.4</span> Chapman-Kolmogorov</a></li>
   </ul>
 </nav>
     </div>
@@ -191,7 +197,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Arm Bracket Fault Detection</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Arm Bracket Fault Detection</span></h1>
 </div>
 
 
@@ -206,8 +212,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="hilbert-huang-transform" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="hilbert-huang-transform"><span class="header-section-number">3.1</span> Hilbert Huang Transform</h2>
+<section id="hilbert-huang-transform" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="hilbert-huang-transform"><span class="header-section-number">4.1</span> Hilbert Huang Transform</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>imf_ener <span class="ot">&lt;-</span> <span class="cf">function</span>(tbl, <span class="at">meas_fn =</span> <span class="st">"x"</span>) {</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  sig <span class="ot">&lt;-</span> tbl <span class="sc">%&gt;%</span> <span class="fu">pull</span>({{ meas_fn }})</span>
@@ -237,8 +243,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="fit-hmm" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="fit-hmm"><span class="header-section-number">3.2</span> Fit HMM</h2>
+<section id="fit-hmm" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="fit-hmm"><span class="header-section-number">4.2</span> Fit HMM</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>get_mm_results <span class="ot">&lt;-</span> <span class="cf">function</span>(tf_loc_id, meas_fn) {</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  .create_objects_for_model <span class="ot">&lt;-</span> <span class="cf">function</span>(tf_loc_id, meas_fn) {</span>
@@ -364,8 +370,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="evaluate-fit" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="evaluate-fit"><span class="header-section-number">3.3</span> Evaluate Fit</h2>
+<section id="evaluate-fit" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="evaluate-fit"><span class="header-section-number">4.3</span> Evaluate Fit</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>retrieve_model_obj <span class="ot">&lt;-</span> <span class="cf">function</span>(path, loc_id, model, meas_fn) {</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  </span>
@@ -413,8 +419,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="chapman-kolmogorov" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="chapman-kolmogorov"><span class="header-section-number">3.4</span> Chapman-Kolmogorov</h2>
+<section id="chapman-kolmogorov" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="chapman-kolmogorov"><span class="header-section-number">4.4</span> Chapman-Kolmogorov</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>calc_trans_mat <span class="ot">&lt;-</span> <span class="cf">function</span>(path, loc_id, model, meas_fn, <span class="at">t_steps =</span> 1L) {</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  model_obj <span class="ot">&lt;-</span> <span class="fu">retrieve_model_obj</span>(path, loc_id, model, meas_fn)</span>
@@ -694,12 +700,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./preprocessing.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Preprocessing Methods</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Preprocessing Methods</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./datacollection.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Query Data</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

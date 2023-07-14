@@ -86,11 +86,11 @@ df <- tibble::tibble(
 pkg_info <- knitr::combine_words(df$info)
 ```
 
-This document was created with `r R.version.string` using the following packages: `r pkg_info`. 
+R info:  `r R.version.string` using the following packages: `r pkg_info`. 
+
+Rust info: `r system("rustc --version", intern = TRUE)`
+
+Python info: `r system("python -V", intern = TRUE)` using the following packages: `r reticulate::py_list_packages() |> dplyr::mutate(info = paste0("(",package, version,")")) |> dplyr::pull(info) |> paste(collapse = ", ")`.
 
 
 
-The Python version is `r reticulate::py_version()` and the installed packages are: `r reticulate::py_list_packages() |> dplyr::mutate(info = paste0("(",package, version,")")) |> dplyr::pull(info) |> paste(collapse = ", ")`.
-
-
-The Rust version is `r `

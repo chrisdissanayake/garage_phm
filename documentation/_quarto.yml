@@ -10,6 +10,7 @@ book:
   date: today
   chapters:
     - index.qmd
+    - bom.qmd
     - calibration.qmd
     - preprocessing.qmd
     - model_arm_brkt.qmd

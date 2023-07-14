@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Garage Door Prognostics and Health Management - 2&nbsp; Preprocessing Methods</title>
+<title>Garage Door Prognostics and Health Management - 3&nbsp; Preprocessing Methods</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./preprocessing.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Preprocessing Methods</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./preprocessing.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Preprocessing Methods</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -143,26 +143,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./bom.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bill of Materials</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./calibration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Calibration</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calibration</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./preprocessing.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Preprocessing Methods</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Preprocessing Methods</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./model_arm_brkt.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Arm Bracket Fault Detection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Arm Bracket Fault Detection</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./datacollection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Query Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -181,17 +187,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#signal-data" id="toc-signal-data" class="nav-link active" data-scroll-target="#signal-data"><span class="header-section-number">3</span> Signal Data</a></li>
-  <li><a href="#median-filter" id="toc-median-filter" class="nav-link" data-scroll-target="#median-filter"><span class="header-section-number">4</span> Median Filter</a>
+  <li><a href="#signal-data" id="toc-signal-data" class="nav-link active" data-scroll-target="#signal-data"><span class="header-section-number">4</span> Signal Data</a></li>
+  <li><a href="#median-filter" id="toc-median-filter" class="nav-link" data-scroll-target="#median-filter"><span class="header-section-number">5</span> Median Filter</a>
   <ul class="collapse">
-  <li><a href="#test-filter" id="toc-test-filter" class="nav-link" data-scroll-target="#test-filter"><span class="header-section-number">4.0.1</span> Test Filter</a></li>
-  <li><a href="#filter-data" id="toc-filter-data" class="nav-link" data-scroll-target="#filter-data"><span class="header-section-number">4.0.2</span> Filter Data</a></li>
+  <li><a href="#verify-filter" id="toc-verify-filter" class="nav-link" data-scroll-target="#verify-filter"><span class="header-section-number">5.0.1</span> Verify Filter</a></li>
+  <li><a href="#filter-data" id="toc-filter-data" class="nav-link" data-scroll-target="#filter-data"><span class="header-section-number">5.0.2</span> Filter Data</a></li>
   </ul></li>
-  <li><a href="#grenerate-virtual-recipe-steps" id="toc-grenerate-virtual-recipe-steps" class="nav-link" data-scroll-target="#grenerate-virtual-recipe-steps"><span class="header-section-number">5</span> Grenerate Virtual Recipe Steps</a>
+  <li><a href="#grenerate-virtual-recipe-steps" id="toc-grenerate-virtual-recipe-steps" class="nav-link" data-scroll-target="#grenerate-virtual-recipe-steps"><span class="header-section-number">6</span> Grenerate Virtual Recipe Steps</a>
   <ul class="collapse">
-  <li><a href="#extract-torsion-coil-response" id="toc-extract-torsion-coil-response" class="nav-link" data-scroll-target="#extract-torsion-coil-response"><span class="header-section-number">5.1</span> Extract Torsion Coil Response</a></li>
-  <li><a href="#extract-door-idle-response" id="toc-extract-door-idle-response" class="nav-link" data-scroll-target="#extract-door-idle-response"><span class="header-section-number">5.2</span> Extract Door Idle Response</a></li>
-  <li><a href="#final-results" id="toc-final-results" class="nav-link" data-scroll-target="#final-results"><span class="header-section-number">5.3</span> Final Results</a></li>
+  <li><a href="#extract-torsion-coil-response" id="toc-extract-torsion-coil-response" class="nav-link" data-scroll-target="#extract-torsion-coil-response"><span class="header-section-number">6.1</span> Extract Torsion Coil Response</a></li>
+  <li><a href="#extract-door-idle-response" id="toc-extract-door-idle-response" class="nav-link" data-scroll-target="#extract-door-idle-response"><span class="header-section-number">6.2</span> Extract Door Idle Response</a></li>
+  <li><a href="#final-results" id="toc-final-results" class="nav-link" data-scroll-target="#final-results"><span class="header-section-number">6.3</span> Final Results</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -201,7 +207,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Preprocessing Methods</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Preprocessing Methods</span></h1>
 </div>
 
 
@@ -216,9 +222,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="signal-data" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Signal Data</h1>
-<p>The function that we will use to do the initial cleaning:</p>
+<section id="signal-data" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Signal Data</h1>
+<p>The function for initial data cleaning:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pre_proc_tbl <span class="ot">&lt;-</span> <span class="cf">function</span>(file_name) {</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">read_table</span>(<span class="fu">str_glue</span>(<span class="st">"../data/{file_name}.txt"</span>), </span>
@@ -249,8 +255,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Acceleration (g)"</span>)</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Here is what a generic signal looks like for one complete cycle.</p>
-<p><strong>Note:</strong> The measurement units are in g’s, but I will keep the designation as “value” since I am not using this explicitly.</p>
+<p>Here is what a signal looks like for one complete cycle (please look at the landing page for the definition).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">pre_proc_tbl</span>(<span class="st">"2023-06-10_garagedoor-1"</span>) </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -261,27 +266,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="preprocessing_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
-<p>The x and y signals have similar dynamics.</p>
-<p>When the door moves about the corner track, the accelerometer tilts at a constant rate. This constant rate of tilt would lead to exponentially decaying or growing solutions, which is consistent to the above signal.</p>
-<p>The tilt of the garage door, denoted by ((t)) can be expressed by a the following first order differential equation:</p>
-<p><span class="math display">\[
-\frac{d\theta}{dt} = f(\theta, G, t)\
-\]</span></p>
-<p>where (f(, G, t)) represents the function describing the dynamics of the garage door, and G is the geometry of the system.</p>
-<p>For the simplest case of tilting about the origin (ignoring the geometry),</p>
-<p><span class="math display">\[
-\frac{d\theta}{dt} =\dot{\theta}\ = \theta
-\]</span> the solution is:</p>
-<p><span class="math display">\[
-\theta \ =  e^t
-\]</span></p>
 </section>
-<section id="median-filter" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Median Filter</h1>
-<p>The data has irregular spike patterns caused by the movement of the curved door arm. These serve no purpose other than to contaminate the signal, and therefore are removed.</p>
-<section id="test-filter" class="level3" data-number="4.0.1">
-<h3 data-number="4.0.1" class="anchored" data-anchor-id="test-filter"><span class="header-section-number">4.0.1</span> Test Filter</h3>
-<p>The goal here is to simulate data with known spikes to verify the filter.</p>
+<section id="median-filter" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Median Filter</h1>
+<p>The data has irregular spike patterns caused by the movement of the curved door arm. These serve no purpose other than to contaminate the signal, and therefore are removed using a simple filter.</p>
+<section id="verify-filter" class="level3" data-number="5.0.1">
+<h3 data-number="5.0.1" class="anchored" data-anchor-id="verify-filter"><span class="header-section-number">5.0.1</span> Verify Filter</h3>
+<p>Verify the filter with simulated data with known spikes:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">1000</span>)</span>
@@ -311,8 +302,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="filter-data" class="level3" data-number="4.0.2">
-<h3 data-number="4.0.2" class="anchored" data-anchor-id="filter-data"><span class="header-section-number">4.0.2</span> Filter Data</h3>
+<section id="filter-data" class="level3" data-number="5.0.2">
+<h3 data-number="5.0.2" class="anchored" data-anchor-id="filter-data"><span class="header-section-number">5.0.2</span> Filter Data</h3>
+<p>The choice of n should be the minimum odd value that will produce the final segmentation on the baseline signal.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(x, y, z), <span class="sc">~</span><span class="fu">mmed</span>(<span class="at">x =</span> ., <span class="at">n =</span> <span class="dv">5</span>)))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -325,8 +317,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="grenerate-virtual-recipe-steps" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Grenerate Virtual Recipe Steps</h1>
+<section id="grenerate-virtual-recipe-steps" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Grenerate Virtual Recipe Steps</h1>
 <p>Below is an automated procedure that cleans and segments the signal into “explainable” parts. It is easy to visualize the idle, torsion coil, and impulse responses from the signal.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> </span>
@@ -345,9 +337,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="preprocessing_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
-<section id="extract-torsion-coil-response" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="extract-torsion-coil-response"><span class="header-section-number">5.1</span> Extract Torsion Coil Response</h2>
-<p>I am using a machine learning method to isolate the up and down tilts (slopes), which are the torsion coil unwinding and winding scenarios.</p>
+<section id="extract-torsion-coil-response" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="extract-torsion-coil-response"><span class="header-section-number">6.1</span> Extract Torsion Coil Response</h2>
+<p>I am using a machine learning method to isolate the torsion coil unwinding and winding scenarios.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm1</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -456,14 +448,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Here is the nomenclature:</p>
 <ul>
-<li><p>0 = horizontal or vertical position</p></li>
-<li><p>-1 = torsion coil winding</p></li>
-<li><p>1 = torsion coil unwinding</p></li>
+<li>0 = horizontal or vertical position</li>
+<li>-1 = torsion coil winding</li>
+<li>1 = torsion coil unwinding</li>
 </ul>
 </section>
-<section id="extract-door-idle-response" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="extract-door-idle-response"><span class="header-section-number">5.2</span> Extract Door Idle Response</h2>
-<p>The door can be idle up or down, and I am fitting a simple dependent mixture model next.</p>
+<section id="extract-door-idle-response" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="extract-door-idle-response"><span class="header-section-number">6.2</span> Extract Door Idle Response</h2>
+<p>To extract information about whether the door is idle up or down, a simple dependent mixture model is used.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(depmixS4)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -479,8 +471,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(ts(posterior(hmm_fit, type = "smoothing")), ylab = "probability", frame = FALSE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="final-results" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="final-results"><span class="header-section-number">5.3</span> Final Results</h2>
+<section id="final-results" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="final-results"><span class="header-section-number">6.3</span> Final Results</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>d_fmerg_final <span class="ot">&lt;-</span> d_fmerg <span class="sc">|&gt;</span> </span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
@@ -492,7 +484,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">bin_hmm =</span> <span class="fu">ifelse</span>(<span class="fu">n</span>() <span class="sc">&lt;</span> <span class="dv">2000</span> , <span class="st">"Transition"</span>, bin_hmm)) <span class="sc">|&gt;</span> </span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">recipe_step =</span> <span class="fu">paste</span>(bin_hmm, bin))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>In this example, you could see the unwinding the torsion coil (pink, door going up) generates a distinct signature compared to the opposite direction (green, door coming down).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>d_fmerg_final <span class="sc">|&gt;</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(x, y, z)) <span class="sc">|&gt;</span></span>
@@ -506,6 +497,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="preprocessing_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
+<p>The unwinding the torsion coil (pink, door going up) generates a distinct signature compared to the opposite direction (green, door coming down).</p>
+<p>The shape of the signal comes from a constant rate of tilt around the corner track, which lead to exponentially decaying or growing solutions, consistent with the above signal.</p>
+<p>The tilt of the garage door, denoted by ((t)) can be expressed by a the following first order differential equation:</p>
+<p><span class="math display">\[
+\frac{d\theta}{dt} = f(\theta, G, t)\
+\]</span></p>
+<p>where (f(, G, t)) represents the function describing the dynamics of the garage door, and G is the geometry of the system.</p>
+<p>For the simplest case of tilting about the origin (ignoring the geometry),</p>
+<p><span class="math display">\[
+\frac{d\theta}{dt} =\dot{\theta}\ = \theta
+\]</span> the solution is:</p>
+<p><span class="math display">\[
+\theta \ =  e^t
+\]</span></p>
 
 
 </section>
@@ -748,12 +753,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./calibration.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Calibration</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calibration</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./model_arm_brkt.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Arm Bracket Fault Detection</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Arm Bracket Fault Detection</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

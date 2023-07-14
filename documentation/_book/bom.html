@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Garage Door Prognostics and Health Management - 5&nbsp; Query Data</title>
+<title>Garage Door Prognostics and Health Management - 1&nbsp; Bill of Materials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,8 +64,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
-<link href="./model_arm_brkt.html" rel="prev">
+<link href="./calibration.html" rel="next">
+<link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -108,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./datacollection.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./bom.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bill of Materials</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -141,7 +141,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./bom.html" class="sidebar-item-text sidebar-link">
+  <a href="./bom.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bill of Materials</span></span></a>
   </div>
 </li>
@@ -165,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./datacollection.html" class="sidebar-item-text sidebar-link active">
+  <a href="./datacollection.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></span></a>
   </div>
 </li>
@@ -181,24 +181,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#make-a-connection" id="toc-make-a-connection" class="nav-link active" data-scroll-target="#make-a-connection"><span class="header-section-number">5.1</span> Make a Connection</a></li>
-  <li><a href="#get-relevant-table-names" id="toc-get-relevant-table-names" class="nav-link" data-scroll-target="#get-relevant-table-names"><span class="header-section-number">5.2</span> Get Relevant Table Names</a></li>
-  <li><a href="#pull-data" id="toc-pull-data" class="nav-link" data-scroll-target="#pull-data"><span class="header-section-number">5.3</span> Pull Data</a></li>
-  <li><a href="#plot-data" id="toc-plot-data" class="nav-link" data-scroll-target="#plot-data"><span class="header-section-number">5.4</span> Plot Data</a></li>
-  <li><a href="#important" id="toc-important" class="nav-link" data-scroll-target="#important"><span class="header-section-number">5.5</span> Important!</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></h1>
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bill of Materials</span></h1>
 </div>
 
 
@@ -213,128 +203,102 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>Data is stored in two AWS RDS databases. Please let me know if you have lost the credentials.</p>
-<ol type="1">
-<li><p>gd_phm_status : This has the model output information, hardware maintenance information, versioning, and configuration settings.</p></li>
-<li><p>metrics : This hosts accuracy and reliability metrics for all my projects. The table for this project is called “gd_phm”.</p></li>
-</ol>
-<p>Shown below is a generic sequence of how one might pull data.</p>
-<section id="make-a-connection" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="make-a-connection"><span class="header-section-number">5.1</span> Make a Connection</h2>
+<p>Each installation has its own BOM structure report.</p>
+<p>Column definitions:</p>
+<ul>
+<li><strong>Lv</strong>: The hardware level, which can expand to multiple monitoring systems if needed.</li>
+<li><strong>Component</strong>: Serial number to be scanned if needed.</li>
+<li><strong>Seq</strong>: The operation sequence from installation onward.</li>
+<li><strong>Description</strong>: Description of the part or component.</li>
+<li><strong>Quantity per</strong>: Number of parts needed for functionality.</li>
+<li><strong>Fix</strong>: Repairability of parts.</li>
+<li><strong>On-date</strong>: Used to track stable parts. Default to “Prepared” date on top.</li>
+<li><strong>Off-date</strong>: Used to track depreciated parts. NULL if stable.</li>
+<li><strong>Rev</strong>: Revision to track prints and schematics.</li>
+<li><strong>Unit Cost</strong>: Cost at the time of document.</li>
+<li><strong>Vendor</strong>: Purchase location.</li>
+<li><strong>Vendor PN</strong>: Vendor part number.</li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  RPostgres<span class="sc">::</span><span class="fu">Postgres</span>(),</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbname =</span> <span class="st">"gd_phm_status"</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">host =</span> <span class="fu">Sys.getenv</span>(<span class="st">"gd_db_host"</span>),</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">port =</span> <span class="dv">5432</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">user =</span> <span class="fu">Sys.getenv</span>(<span class="st">"gd_db_user"</span>),</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">password =</span> <span class="fu">Sys.getenv</span>(<span class="st">"gd_db_pw"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="get-relevant-table-names" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="get-relevant-table-names"><span class="header-section-number">5.2</span> Get Relevant Table Names</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">conn =</span> con,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SELECT table_name</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st">  FROM information_schema.tables</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">  WHERE table_name like '%gd%'</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>tbl <span class="sc">|&gt;</span> <span class="fu">pull</span>(table_name) <span class="sc">|&gt;</span> <span class="fu">cat</span>(<span class="at">sep =</span> <span class="st">", "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>file_list <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"../BOM/"</span>, <span class="at">pattern =</span> <span class="st">"BOM STRUCTURE REPORT – ALL LEVELS"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>bom_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (filename <span class="cf">in</span> file_list) {</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  location_id <span class="ot">&lt;-</span> stringr<span class="sc">::</span><span class="fu">str_extract</span>(filename, <span class="st">"[A-Z]</span><span class="sc">\\</span><span class="st">d{2}</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">d{2}(?=</span><span class="sc">\\</span><span class="st">.xlsx$)"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(filename, <span class="at">skip =</span> <span class="dv">6</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span><span class="fu">matches</span>(<span class="st">"^</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">."</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">location_id =</span> location_id) </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  bom_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(bom_data, data)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>bom_data <span class="ot">&lt;-</span> bom_data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(location_id) </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>bom_data <span class="sc">|&gt;</span> <span class="fu">filter</span>(location_id <span class="sc">==</span> <span class="st">"A00.01"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>#&gt; gd_meas_tbl, gd_config_hw_tbl, gd_config_models_tbl</code></pre>
+<pre><code>#&gt;    location_id Lv Component    Seq                         Description Quantity Fix
+#&gt; 1       A00.01 01   GD-0001 000001                 AD335 Accelerometer        1   N
+#&gt; 2       A00.01 01   GD-0003 000001          Arduino Uno WiFi R3, Board        1   N
+#&gt; 3       A00.01 01   GD-0004 000002            Cable, USB- Printer 1 ft        1   N
+#&gt; 4       A00.01 01   GD-0005 000001        Breadboard Jumper M-F ribbon        1   Y
+#&gt; 5       A00.01 02   GD-0006 000001                Cable, USB M-F 10 ft        1   N
+#&gt; 6       A00.01 01   GD-0007 000002               Extension cord, 15 ft        1   N
+#&gt; 7       A00.01 01   GD-0008 000001 Arduino Uno WiFi R3, Case, 3D print        1   Y
+#&gt; 8       A00.01 01   GD-0009 000001                    ADXL Mount, 2pcs        1   Y
+#&gt; 9       A00.01 01   GD-0010 000002                     Dell Wyse, 3040        1   Y
+#&gt; 10      A00.01 01   GD-0011 000002                  500GB M.2. Crucial        1   N
+#&gt; 11      A00.01 01   GD-0012 000001      SCREW, M2 x  4.8 mm LG, BLK OX        2   N
+#&gt; 12      A00.01 01   GD-0013 000001       SCREW, M3 x  20 mm LG, BLK OX        4   N
+#&gt;    On-date Off-date Rev Unit Cost   Vendor    Vendor PN
+#&gt; 1       NA       NA   A     14.95 adafruit 1528-1120-ND
+#&gt; 2       NA       NA   A     27.60  Digikey 1050-1024-ND
+#&gt; 3       NA       NA   A      4.99   Amazon   B08LDRMFCB
+#&gt; 4       NA       NA   A      3.95  Digikey 1528-1162-ND
+#&gt; 5       NA       NA   A      8.59   Amazon   B08FJ8Z4TJ
+#&gt; 6       NA       NA   A      7.95   Amazon   B000KKJUHE
+#&gt; 7       NA       NA   A      &lt;NA&gt;     &lt;NA&gt;         &lt;NA&gt;
+#&gt; 8       NA       NA   A      &lt;NA&gt;     &lt;NA&gt;         &lt;NA&gt;
+#&gt; 9       NA       NA   A     35.23     ebay         &lt;NA&gt;
+#&gt; 10      NA       NA   A     21.99   Amazon  CT500P3SSD8
+#&gt; 11      NA       NA   A      &lt;NA&gt;     ebay         &lt;NA&gt;
+#&gt; 12      NA       NA   A      &lt;NA&gt;     ebay         &lt;NA&gt;</code></pre>
 </div>
 </div>
-</section>
-<section id="pull-data" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="pull-data"><span class="header-section-number">5.3</span> Pull Data</h2>
+<p>The total cost per installation:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">conn =</span> con,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"WITH joined_tbl AS (</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="st">      gd_config_hw_tbl.*,</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="st">      meas_date,</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="st">      meas_seq,</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="st">      status,</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="st">      gd_meas_tbl.model AS model,</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="st">      prob,</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="st">      model_version,</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="st">      version_from,</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="st">      version_to</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM gd_config_hw_tbl</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="st">    INNER JOIN gd_meas_tbl</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="st">      ON (gd_config_hw_tbl.location_id = gd_meas_tbl.location_id)</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="st">    INNER JOIN gd_config_models_tbl</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="st">      ON (</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="st">        gd_config_hw_tbl.location_id = gd_config_models_tbl.location_id AND</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="st">        gd_meas_tbl.model = gd_config_models_tbl.model</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="st">         )</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="st">    )</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="st">  SELECT</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="st">    state,</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="st">    city_code,</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="st">    location_id,</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="st">    model,</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="st">    model_version,</span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="st">    meas_date,</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="st">    MAX(prob) AS prob_max</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="st">  FROM joined_tbl</span></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="st">  WHERE (meas_date &gt;= version_from AND ((version_to IS NULL) OR meas_date &lt;= version_to))</span></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="st">  GROUP BY state, city_code, location_id, model, model_version, meas_date;"</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>tbl <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>bom_data <span class="ot">&lt;-</span> bom_data <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit_cost =</span> <span class="fu">parse_number</span>(unit_cost))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>bom_data <span class="sc">|&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location_id) <span class="sc">|&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_cost =</span> <span class="fu">sum</span>(unit_cost, <span class="at">na.rm =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>#&gt;    state city_code location_id    model model_version  meas_date  prob_max
-#&gt; 1     MN       AAA      A00.01 arm_brkt    2023.03.12 2023-03-12 0.0008547
-#&gt; 2     MN       AAA      A00.01 arm_brkt    2023.03.12 2023-03-13 0.0014096
-#&gt; 3     MN       AAA      A00.01 arm_brkt    2023.03.12 2023-03-14 0.0009876
-#&gt; 4     MN       AAA      A00.01 arm_brkt    2023.03.12 2023-03-15 0.0023421
-#&gt; 5     MN       AAA      A00.01 arm_brkt    2023.03.15 2023-03-15 0.0023421
-#&gt; 6     MN       AAA      A00.01 arm_brkt    2023.03.15 2023-03-16 0.0069242
-#&gt; 7     MN       AAA      A00.01 arm_brkt    2023.03.15 2023-03-17 0.0062839
-#&gt; 8     MN       AAA      A00.01 arm_brkt    2023.03.15 2023-03-18 0.0352436
-#&gt; 9     MN       AAA      A00.01 arm_brkt    2023.03.15 2023-03-19 0.0210955
-#&gt; 10    MN       AAA      A00.01 arm_brkt    2023.03.15 2023-03-20 0.0015077</code></pre>
+<pre><code>#&gt; # A tibble: 3 × 2
+#&gt;   location_id total_cost
+#&gt;   &lt;chr&gt;            &lt;dbl&gt;
+#&gt; 1 A00.01            125.
+#&gt; 2 B00.01            125.
+#&gt; 3 C00.01            125.</code></pre>
 </div>
 </div>
-</section>
-<section id="plot-data" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="plot-data"><span class="header-section-number">5.4</span> Plot Data</h2>
+<p>We can also plot the part inventory.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tbl <span class="sc">|&gt;</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(meas_date <span class="sc">&lt;</span> <span class="fu">as.Date</span>(<span class="st">"2023-06-11"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="fu">ifelse</span>(model <span class="sc">==</span> <span class="st">"arm_brkt"</span>, <span class="st">"Arm Bracket Fault"</span>, model)) <span class="sc">|&gt;</span> </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(meas_date, prob_max, <span class="at">col =</span> model_version)) <span class="sc">+</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(location_id<span class="sc">~</span> model, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">"2 weeks"</span>) <span class="sc">+</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Daily Maximum Fault Probability for Each IoT Device Monitored Against Model Version"</span>, </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Date"</span>, </span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Fault Probability"</span>,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"Model Version"</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>bom_data <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location_id, component, description) <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(component, n, <span class="at">fill =</span> location_id)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="datacollection_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="768"></p>
+<p><img src="bom_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
-</section>
-<section id="important" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="important"><span class="header-section-number">5.5</span> Important!</h2>
-<p>Please close the connection after you are done.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p>If there are any one offs, you could filter through the original table using the serial number to track parts.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -572,13 +536,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./model_arm_brkt.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Arm Bracket Fault Detection</span></span>
+      <a href="./index.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Introduction</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./calibration.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calibration</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

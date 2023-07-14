@@ -18,7 +18,6 @@ The technical datasheet for ADXL335 is [here](https://www.analog.com/media/en/te
 
 The calibration procedure is highlighted [here](https://learn.adafruit.com/adxl345-digital-accelerometer/programming){target="_blank"}. This also serves the purpose of verifying the functionality of the accelerometer.
 
-Here is the code: 
 
 ```{cpp eval = FALSE}
 #include <math.h>
@@ -221,7 +220,7 @@ d_long |>
 
 ```
 
-The curve typically follows a hinge function. In our example, it may not be appropriate to select the zero degree position, and it is recommended to re-measure the top three angles. For this instance, the sensor was positioned at a five-degree counterclockwise (CCW) offset.
+The curve typically follows a hinge function. In our example, it may not be appropriate to select the zero degree position, and it is recommended to re-measure the top three angles. For this instance, the sensor was positioned at a five-degree clockwise (CW) offset.
 
 
 

@@ -1,0 +1,77 @@
+# Bill of Materials
+
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+library(janitor)
+library(readxl)
+```
+
+Each installation has its own BOM structure report. 
+
+Column definitions:
+
+- **Lv**: The hardware level, which can expand to multiple monitoring systems if needed.
+- **Component**: Serial number to be scanned if needed.
+- **Seq**: The operation sequence from installation onward.
+- **Description**: Description of the part or component.
+- **Quantity per**: Number of parts needed for functionality.
+- **Fix**: Repairability of parts.
+- **On-date**: Used to track stable parts. Default to "Prepared" date on top.
+- **Off-date**: Used to track depreciated parts. NULL if stable.
+- **Rev**: Revision to track prints and schematics.
+- **Unit Cost**: Cost at the time of document.
+- **Vendor**: Purchase location.
+- **Vendor PN**: Vendor part number.
+
+
+```{r}
+file_list <- list.files("../BOM/", pattern = "BOM STRUCTURE REPORT – ALL LEVELS", full.names = TRUE)
+
+bom_data <- data.frame()
+
+for (filename in file_list) {
+  location_id <- stringr::str_extract(filename, "[A-Z]\\d{2}\\.\\d{2}(?=\\.xlsx$)")
+  
+  data <- read_xlsx(filename, skip = 6) |>
+    select(-matches("^\\.\\.")) |> 
+    mutate(location_id = location_id) 
+  
+  bom_data <- bind_rows(bom_data, data)
+}
+
+bom_data <- bom_data |> relocate(location_id) 
+
+bom_data |> filter(location_id == "A00.01")
+
+```
+
+The total cost per installation: 
+
+```{r}
+bom_data <- bom_data |> 
+  clean_names() |> 
+  mutate(unit_cost = parse_number(unit_cost))
+
+bom_data |>
+  group_by(location_id) |>
+  summarize(total_cost = sum(unit_cost, na.rm = T))
+
+```
+
+We can also plot the part inventory. 
+
+```{r}
+bom_data |> 
+  group_by(location_id, component, description) |> 
+  count() |> 
+  ggplot(aes(component, n, fill = location_id)) +
+  geom_col() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+If there are any one offs, you could filter through the original table using the serial number to track parts. 
+
+
+
