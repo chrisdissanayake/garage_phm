@@ -60,7 +60,7 @@ bom_data |>
 
 ```
 
-We can also plot the part inventory. 
+We can also plot the parts installed. 
 
 ```{r}
 bom_data |> 
