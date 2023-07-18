@@ -96,6 +96,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="site_libs/datatables-binding-0.28/datatables.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="site_libs/dt-core-1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="site_libs/dt-core-1.13.4/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="site_libs/dt-core-1.13.4/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+
 
 </head>
 
@@ -148,7 +158,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./calibration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calibration</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Installation and Calibration</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -166,7 +176,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./datacollection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Stored Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -181,7 +191,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#bom-structure-report" id="toc-bom-structure-report" class="nav-link active" data-scroll-target="#bom-structure-report"><span class="header-section-number">1.1</span> BOM structure report</a></li>
+  <li><a href="#get-total-cost-per-installation" id="toc-get-total-cost-per-installation" class="nav-link" data-scroll-target="#get-total-cost-per-installation"><span class="header-section-number">1.2</span> Get total cost per installation</a></li>
+  <li><a href="#plot-installed-parts" id="toc-plot-installed-parts" class="nav-link" data-scroll-target="#plot-installed-parts"><span class="header-section-number">1.3</span> Plot Installed Parts</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -203,22 +221,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>Each installation has its own BOM structure report.</p>
-<p>Column definitions:</p>
-<ul>
-<li><strong>Lv</strong>: The hardware level, which can expand to multiple monitoring systems if needed.</li>
-<li><strong>Component</strong>: Serial number to be scanned if needed.</li>
-<li><strong>Seq</strong>: The operation sequence from installation onward.</li>
-<li><strong>Description</strong>: Description of the part or component.</li>
-<li><strong>Quantity per</strong>: Number of parts needed for functionality.</li>
-<li><strong>Fix</strong>: Repairability of parts.</li>
-<li><strong>On-date</strong>: Used to track stable parts. Default to “Prepared” date on top.</li>
-<li><strong>Off-date</strong>: Used to track depreciated parts. NULL if stable.</li>
-<li><strong>Rev</strong>: Revision to track prints and schematics.</li>
-<li><strong>Unit Cost</strong>: Cost at the time of document.</li>
-<li><strong>Vendor</strong>: Purchase location.</li>
-<li><strong>Vendor PN</strong>: Vendor part number.</li>
-</ul>
+<p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
+<section id="bom-structure-report" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="bom-structure-report"><span class="header-section-number">1.1</span> BOM structure report</h2>
+<p>Every device has its own BOM structure report.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>file_list <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"../BOM/"</span>, <span class="at">pattern =</span> <span class="st">"BOM STRUCTURE REPORT – ALL LEVELS"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -236,45 +242,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>bom_data <span class="ot">&lt;-</span> bom_data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(location_id) </span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>bom_data <span class="sc">|&gt;</span> <span class="fu">filter</span>(location_id <span class="sc">==</span> <span class="st">"A00.01"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt;    location_id Lv Component    Seq                         Description Quantity Fix
-#&gt; 1       A00.01 01   GD-0001 000001                 AD335 Accelerometer        1   N
-#&gt; 2       A00.01 01   GD-0003 000001          Arduino Uno WiFi R3, Board        1   N
-#&gt; 3       A00.01 01   GD-0004 000002            Cable, USB- Printer 1 ft        1   N
-#&gt; 4       A00.01 01   GD-0005 000001        Breadboard Jumper M-F ribbon        1   Y
-#&gt; 5       A00.01 02   GD-0006 000001                Cable, USB M-F 10 ft        1   N
-#&gt; 6       A00.01 01   GD-0007 000002               Extension cord, 15 ft        1   N
-#&gt; 7       A00.01 01   GD-0008 000001 Arduino Uno WiFi R3, Case, 3D print        1   Y
-#&gt; 8       A00.01 01   GD-0009 000001                    ADXL Mount, 2pcs        1   Y
-#&gt; 9       A00.01 01   GD-0010 000002                     Dell Wyse, 3040        1   Y
-#&gt; 10      A00.01 01   GD-0011 000002                  500GB M.2. Crucial        1   N
-#&gt; 11      A00.01 01   GD-0012 000001      SCREW, M2 x  4.8 mm LG, BLK OX        2   N
-#&gt; 12      A00.01 01   GD-0013 000001       SCREW, M3 x  20 mm LG, BLK OX        4   N
-#&gt;    On-date Off-date Rev Unit Cost   Vendor    Vendor PN
-#&gt; 1       NA       NA   A     14.95 adafruit 1528-1120-ND
-#&gt; 2       NA       NA   A     27.60  Digikey 1050-1024-ND
-#&gt; 3       NA       NA   A      4.99   Amazon   B08LDRMFCB
-#&gt; 4       NA       NA   A      3.95  Digikey 1528-1162-ND
-#&gt; 5       NA       NA   A      8.59   Amazon   B08FJ8Z4TJ
-#&gt; 6       NA       NA   A      7.95   Amazon   B000KKJUHE
-#&gt; 7       NA       NA   A      &lt;NA&gt;     &lt;NA&gt;         &lt;NA&gt;
-#&gt; 8       NA       NA   A      &lt;NA&gt;     &lt;NA&gt;         &lt;NA&gt;
-#&gt; 9       NA       NA   A     35.23     ebay         &lt;NA&gt;
-#&gt; 10      NA       NA   A     21.99   Amazon  CT500P3SSD8
-#&gt; 11      NA       NA   A      &lt;NA&gt;     ebay         &lt;NA&gt;
-#&gt; 12      NA       NA   A      &lt;NA&gt;     ebay         &lt;NA&gt;</code></pre>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>bom_data <span class="sc">|&gt;</span> <span class="fu">filter</span>(location_id <span class="sc">==</span> <span class="st">"A00.01"</span>) <span class="sc">|&gt;</span> DT<span class="sc">::</span><span class="fu">datatable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-8b091040f964cc6f610a" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-8b091040f964cc6f610a">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12"],["A00.01","A00.01","A00.01","A00.01","A00.01","A00.01","A00.01","A00.01","A00.01","A00.01","A00.01","A00.01"],["01","01","01","01","02","01","01","01","01","01","01","01"],["GD-0001","GD-0003","GD-0004","GD-0005","GD-0006","GD-0007","GD-0008","GD-0009","GD-0010","GD-0011","GD-0012","GD-0013"],["000001","000001","000002","000001","000001","000002","000001","000001","000002","000002","000001","000001"],["AD335 Accelerometer","Arduino Uno WiFi R3, Board","Cable, USB- Printer 1 ft","Breadboard Jumper M-F ribbon","Cable, USB M-F 10 ft","Extension cord, 15 ft","Arduino Uno WiFi R3, Case, 3D print","ADXL Mount, 2pcs","Dell Wyse, 3040","500GB M.2. Crucial","SCREW, M2 x  4.8 mm LG, BLK OX","SCREW, M3 x  20 mm LG, BLK OX"],["1","1","1","1","1","1","1","1","1","1","2","4"],["N","N","N","Y","N","N","Y","Y","Y","N","N","N"],[null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null],["A","A","A","A","A","A","A","A","A","A","A","A"],["14.95","27.60","4.99","3.95","8.59","7.95",null,null,"35.23","21.99",null,null],["adafruit","Digikey","Amazon","Digikey","Amazon","Amazon",null,null,"ebay","Amazon","ebay","ebay"],["1528-1120-ND","1050-1024-ND","B08LDRMFCB","1528-1162-ND","B08FJ8Z4TJ","B000KKJUHE",null,null,null,"CT500P3SSD8",null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>location_id<\/th>\n      <th>Lv<\/th>\n      <th>Component<\/th>\n      <th>Seq<\/th>\n      <th>Description<\/th>\n      <th>Quantity<\/th>\n      <th>Fix<\/th>\n      <th>On-date<\/th>\n      <th>Off-date<\/th>\n      <th>Rev<\/th>\n      <th>Unit Cost<\/th>\n      <th>Vendor<\/th>\n      <th>Vendor PN<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
-<p>The total cost per installation:</p>
+<p>Column definitions:</p>
+<ul>
+<li><strong>Lv</strong>: The hardware level, which can expand to multiple monitoring systems if needed.</li>
+<li><strong>Component</strong>: Serial number to be scanned if needed.</li>
+<li><strong>Seq</strong>: The operation sequence from installation onward.</li>
+<li><strong>Description</strong>: Description of the part or component.</li>
+<li><strong>Quantity per</strong>: Number of parts needed for functionality.</li>
+<li><strong>Fix</strong>: Repairability of parts.</li>
+<li><strong>On-date</strong>: To track stable parts. Default to “Prepared” date on top.</li>
+<li><strong>Off-date</strong>: To track depreciated parts. NULL if stable.</li>
+<li><strong>Rev</strong>: Revision to track prints and schematics.</li>
+<li><strong>Unit Cost</strong>: Cost at the time of document.</li>
+<li><strong>Vendor</strong>: Vendor information of location.</li>
+<li><strong>Vendor PN</strong>: Vendor part number.</li>
+</ul>
+</section>
+<section id="get-total-cost-per-installation" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="get-total-cost-per-installation"><span class="header-section-number">1.2</span> Get total cost per installation</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>bom_data <span class="ot">&lt;-</span> bom_data <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit_cost =</span> <span class="fu">parse_number</span>(unit_cost))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>bom_data <span class="sc">|&gt;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location_id) <span class="sc">|&gt;</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_cost =</span> <span class="fu">sum</span>(unit_cost, <span class="at">na.rm =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>bom_data <span class="ot">&lt;-</span> bom_data <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit_cost =</span> <span class="fu">parse_number</span>(unit_cost))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>bom_data <span class="sc">|&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location_id) <span class="sc">|&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_cost =</span> <span class="fu">sum</span>(unit_cost, <span class="at">na.rm =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 3 × 2
 #&gt;   location_id total_cost
@@ -284,21 +284,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #&gt; 3 C00.01            125.</code></pre>
 </div>
 </div>
-<p>We can also plot the parts installed.</p>
+</section>
+<section id="plot-installed-parts" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="plot-installed-parts"><span class="header-section-number">1.3</span> Plot Installed Parts</h2>
+<p>If there are any one offs, one could filter through the original table using the serial number to track parts.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>bom_data <span class="sc">|&gt;</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location_id, component, description) <span class="sc">|&gt;</span> </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(component, n, <span class="at">fill =</span> location_id)) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>bom_data <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location_id, component, description) <span class="sc">|&gt;</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(component, n, <span class="at">fill =</span> location_id)) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="bom_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
-<p>If there are any one offs, you could filter through the original table using the serial number to track parts.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -542,7 +545,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./calibration.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calibration</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Installation and Calibration</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

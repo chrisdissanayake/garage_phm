@@ -10,10 +10,10 @@ library(reticulate)
 
 Welcome to the documentation for the “Garage Door Prognostics” project.
 
-The sections are arranged by functionality. 
 
 ## System Configuration
 
+![](./man/figures/lifecycle-experimental.svg)
 
 ![ ](./images_for_document/ptype.jpg){width="49.7%" fig-align="center"}
 
@@ -22,24 +22,22 @@ The sections are arranged by functionality.
 graph TB
 A(Accelerometer)-->AA 
 
-subgraph Replace
+subgraph Future-Replace
 AA[Arduino]-->E[Thin Client]
-style Replace fill:#f0f0f0,stroke:grey,stroke-width:2px
+style Future-Replace fill:#f0f0f0,stroke:grey,stroke-width:2px
 end
 
 E-->F[AWS RDS]
-F-->G(Dashboard </br>Metrics, Sensor, Data Decisions)
-F-->H[Decision Making]
-H-->G
+F-->FF[Decisions / Notifications]
+F-->G("Dashboard </br>(Metrics, Sensor Data,  Decisions)")
+FF-.->G
 GD(Garage Door) -.-> A
-M(Calibration) -.-> A
-style A fill:#B6E6E6
+style G fill:#B6E6E6
 style GD fill:salmon 
 style E stroke:blue,stroke-width:3px
 
 subgraph Thin-Client
 BB((Every </br> 2 Hours))-->CA[Gather Data]
-CA-->CAA
 BB-->CAA[Preprocess]
 CAA-->CAAB{Door Activity?}
 CAAB--Yes-->CBB[Run Models]
@@ -69,28 +67,13 @@ mtcars |>
 
 ## Session Information 
 
-```{r pkg-list, echo = FALSE}
-deps <- desc::desc_get_deps()
-pkgs <- sort(deps$package[deps$type == "Imports"])
-pkgs <- sessioninfo::package_info(pkgs, dependencies = FALSE)
-df <- tibble::tibble(
-  package = pkgs$package,
-  version = pkgs$ondiskversion,
-  source = pkgs$source
-) |> 
-  dplyr::mutate(
-    source = stringr::str_split(source, " "),
-    source = purrr::map_chr(source, ~ .x[1]),
-    info = paste0(package, " (", version, ", ", source, ")")
-    )
-pkg_info <- knitr::combine_words(df$info)
-```
+Everything on this documentation is reproducible. The code and data are [here](https://github.com/chrisdissanayake/garage_phm). 
 
-R info:  `r R.version.string` using the following packages: `r pkg_info`. 
+**R:**  `r R.version.string` 
 
-Rust info: `r system("rustc --version", intern = TRUE)`
+**Rust:** `r system("rustc --version", intern = TRUE)`
 
-Python info: `r system("python -V", intern = TRUE)` using the following packages: `r reticulate::py_list_packages() |> dplyr::mutate(info = paste0("(",package, version,")")) |> dplyr::pull(info) |> paste(collapse = ", ")`.
+**Python:** `r system("python -V", intern = TRUE)` 
 
-
+**C++:** `r system("gcc --version", intern =  TRUE)`
 

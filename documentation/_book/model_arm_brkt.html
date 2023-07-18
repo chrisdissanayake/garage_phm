@@ -148,7 +148,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./calibration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calibration</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Installation and Calibration</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -166,7 +166,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./datacollection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Stored Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -214,6 +214,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="hilbert-huang-transform" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="hilbert-huang-transform"><span class="header-section-number">4.1</span> Hilbert Huang Transform</h2>
+<p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>imf_ener <span class="ot">&lt;-</span> <span class="cf">function</span>(tbl, <span class="at">meas_fn =</span> <span class="st">"x"</span>) {</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  sig <span class="ot">&lt;-</span> tbl <span class="sc">%&gt;%</span> <span class="fu">pull</span>({{ meas_fn }})</span>
@@ -245,6 +246,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="fit-hmm" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="fit-hmm"><span class="header-section-number">4.2</span> Fit HMM</h2>
+<p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>get_mm_results <span class="ot">&lt;-</span> <span class="cf">function</span>(tf_loc_id, meas_fn) {</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  .create_objects_for_model <span class="ot">&lt;-</span> <span class="cf">function</span>(tf_loc_id, meas_fn) {</span>
@@ -372,6 +374,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="evaluate-fit" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="evaluate-fit"><span class="header-section-number">4.3</span> Evaluate Fit</h2>
+<p><img src="./man/figures/lifecycle-maturing.svg" class="img-fluid"></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>retrieve_model_obj <span class="ot">&lt;-</span> <span class="cf">function</span>(path, loc_id, model, meas_fn) {</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  </span>
@@ -421,6 +424,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="chapman-kolmogorov" class="level2" data-number="4.4">
 <h2 data-number="4.4" class="anchored" data-anchor-id="chapman-kolmogorov"><span class="header-section-number">4.4</span> Chapman-Kolmogorov</h2>
+<p><img src="./man/figures/lifecycle-questioning.svg" class="img-fluid"></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>calc_trans_mat <span class="ot">&lt;-</span> <span class="cf">function</span>(path, loc_id, model, meas_fn, <span class="at">t_steps =</span> 1L) {</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  model_obj <span class="ot">&lt;-</span> <span class="fu">retrieve_model_obj</span>(path, loc_id, model, meas_fn)</span>
@@ -705,7 +709,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./datacollection.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Stored Data</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -150,7 +150,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./calibration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calibration</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Installation and Calibration</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -168,7 +168,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./datacollection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Stored Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -187,18 +187,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#signal-data" id="toc-signal-data" class="nav-link active" data-scroll-target="#signal-data"><span class="header-section-number">4</span> Signal Data</a></li>
-  <li><a href="#median-filter" id="toc-median-filter" class="nav-link" data-scroll-target="#median-filter"><span class="header-section-number">5</span> Median Filter</a>
+  <li><a href="#signal" id="toc-signal" class="nav-link active" data-scroll-target="#signal"><span class="header-section-number">3.1</span> Signal</a></li>
+  <li><a href="#median-filter" id="toc-median-filter" class="nav-link" data-scroll-target="#median-filter"><span class="header-section-number">3.2</span> Median Filter</a>
   <ul class="collapse">
-  <li><a href="#verify-filter" id="toc-verify-filter" class="nav-link" data-scroll-target="#verify-filter"><span class="header-section-number">5.0.1</span> Verify Filter</a></li>
-  <li><a href="#filter-data" id="toc-filter-data" class="nav-link" data-scroll-target="#filter-data"><span class="header-section-number">5.0.2</span> Filter Data</a></li>
+  <li><a href="#verify-filter" id="toc-verify-filter" class="nav-link" data-scroll-target="#verify-filter"><span class="header-section-number">3.2.1</span> Verify Filter</a></li>
+  <li><a href="#filter-data" id="toc-filter-data" class="nav-link" data-scroll-target="#filter-data"><span class="header-section-number">3.2.2</span> Filter Data</a></li>
   </ul></li>
-  <li><a href="#grenerate-virtual-recipe-steps" id="toc-grenerate-virtual-recipe-steps" class="nav-link" data-scroll-target="#grenerate-virtual-recipe-steps"><span class="header-section-number">6</span> Grenerate Virtual Recipe Steps</a>
+  <li><a href="#grenerate-virtual-recipe-steps" id="toc-grenerate-virtual-recipe-steps" class="nav-link" data-scroll-target="#grenerate-virtual-recipe-steps"><span class="header-section-number">3.3</span> Grenerate Virtual Recipe Steps</a>
   <ul class="collapse">
-  <li><a href="#extract-torsion-coil-response" id="toc-extract-torsion-coil-response" class="nav-link" data-scroll-target="#extract-torsion-coil-response"><span class="header-section-number">6.1</span> Extract Torsion Coil Response</a></li>
-  <li><a href="#extract-door-idle-response" id="toc-extract-door-idle-response" class="nav-link" data-scroll-target="#extract-door-idle-response"><span class="header-section-number">6.2</span> Extract Door Idle Response</a></li>
-  <li><a href="#final-results" id="toc-final-results" class="nav-link" data-scroll-target="#final-results"><span class="header-section-number">6.3</span> Final Results</a></li>
+  <li><a href="#extract-torsion-coil-response" id="toc-extract-torsion-coil-response" class="nav-link" data-scroll-target="#extract-torsion-coil-response"><span class="header-section-number">3.3.1</span> Extract Torsion Coil Response</a></li>
+  <li><a href="#extract-door-idle-response" id="toc-extract-door-idle-response" class="nav-link" data-scroll-target="#extract-door-idle-response"><span class="header-section-number">3.3.2</span> Extract Door Idle Response</a></li>
   </ul></li>
+  <li><a href="#final-results" id="toc-final-results" class="nav-link" data-scroll-target="#final-results"><span class="header-section-number">3.4</span> Final Results</a></li>
   </ul>
 </nav>
     </div>
@@ -222,298 +222,271 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="signal-data" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Signal Data</h1>
-<p>The function for initial data cleaning:</p>
+<section id="signal" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="signal"><span class="header-section-number">3.1</span> Signal</h2>
+<p>Shown below is a signal for one complete cycle. Note that the Acceleration of y axis, the axis that is pointing down, is not exactly at 1g.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pre_proc_tbl <span class="ot">&lt;-</span> <span class="cf">function</span>(file_name) {</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">read_table</span>(<span class="fu">str_glue</span>(<span class="st">"../data/{file_name}.txt"</span>), </span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">.default =</span> <span class="st">"character"</span>, <span class="st">"X6"</span> <span class="ot">=</span> <span class="fu">col_skip</span>()),</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">skip =</span> <span class="dv">10</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  col_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"time"</span>, <span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"z"</span>, <span class="st">"tilt_fc"</span>, <span class="st">"tilt_tw"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">set_names</span>(d, col_names)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> </span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate_if</span>(is.character, <span class="at">.funs =</span> as.numeric) <span class="sc">|&gt;</span> </span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">time =</span> <span class="fu">as.numeric</span>(time), </span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">time =</span> lubridate<span class="sc">::</span><span class="fu">milliseconds</span>(time)) <span class="co"># for modeling, not for plotting </span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> tidyr<span class="sc">::</span><span class="fu">drop_na</span>()</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">pre_proc_tbl</span>(<span class="st">"2023-06-10_garagedoor-1"</span>) </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_ad</span>() <span class="sc">+</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Accelerometer Signal (Triaxial)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="preprocessing_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="768"></p>
 </div>
-<p>The function to plot the signal:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>plot_ad <span class="ot">&lt;-</span> <span class="cf">function</span>(tbl) {</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  tbl <span class="sc">|&gt;</span> </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"z"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">time =</span> <span class="fu">seq_along</span>(time)<span class="sc">/</span><span class="dv">1000</span>) <span class="sc">|&gt;</span> <span class="co"># in ms</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, value)) <span class="sc">+</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>name) <span class="sc">+</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"time (s)"</span>, </span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Acceleration (g)"</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Here is what a signal looks like for one complete cycle (please look at the landing page for the definition).</p>
+</section>
+<section id="median-filter" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="median-filter"><span class="header-section-number">3.2</span> Median Filter</h2>
+<p><img src="./man/figures/lifecycle-maturing.svg" class="img-fluid"></p>
+<p>The data has irregular spike patterns caused by the slack of the curved door arm. A simple filter is used to remove them.</p>
+<section id="verify-filter" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="verify-filter"><span class="header-section-number">3.2.1</span> Verify Filter</h3>
+<p>The choice of n should be the minimum odd value that will remove added spikes from the baseline signal.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">pre_proc_tbl</span>(<span class="st">"2023-06-10_garagedoor-1"</span>) </span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">1000</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>imp_sig <span class="ot">&lt;-</span> <span class="fu">rpois</span>(<span class="fu">length</span>(t), <span class="at">lambda =</span> <span class="fl">0.1</span>) </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>imp_sig_damp <span class="ot">&lt;-</span> imp_sig <span class="sc">*</span> <span class="fl">0.01</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>signal <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fl">0.2</span> <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">*</span><span class="fu">exp</span>(<span class="sc">-</span>t)) <span class="sc">+</span> imp_sig_damp</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>mmed <span class="ot">&lt;-</span> <span class="cf">function</span>(x,<span class="at">n=</span><span class="dv">9</span>){<span class="fu">runmed</span>(x,n)} </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>signal_fil <span class="ot">&lt;-</span> <span class="fu">mmed</span>(signal, <span class="at">n =</span> <span class="dv">7</span>) </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>d_med <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Original =</span> signal,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Filtered =</span> signal_fil</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">t =</span> <span class="fu">seq_along</span>(Original)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(Original, Filtered)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">fct_relevel</span>(name, <span class="fu">c</span>(<span class="st">"Original"</span>, <span class="st">"Filtered"</span>)))</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>d_med <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(t, value)) <span class="sc">+</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>name) <span class="sc">+</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Median Filter Test on a Gompertz Curve"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="preprocessing_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
+</section>
+<section id="filter-data" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="filter-data"><span class="header-section-number">3.2.2</span> Filter Data</h3>
+<p>The choice of n should be the minimum odd value that will produce the final segmentation on the baseline signal. This parameter needs to be verified after any adjustment to the accelerometer or hardware during the qualification process.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(x, y, z), <span class="sc">~</span><span class="fu">mmed</span>(<span class="at">x =</span> ., <span class="at">n =</span> <span class="dv">5</span>)))</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> </span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_ad</span>() <span class="sc">+</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Accelerometer Signal (Triaxial)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Median Filtered Signal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="preprocessing_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
 </section>
-<section id="median-filter" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Median Filter</h1>
-<p>The data has irregular spike patterns caused by the movement of the curved door arm. These serve no purpose other than to contaminate the signal, and therefore are removed using a simple filter.</p>
-<section id="verify-filter" class="level3" data-number="5.0.1">
-<h3 data-number="5.0.1" class="anchored" data-anchor-id="verify-filter"><span class="header-section-number">5.0.1</span> Verify Filter</h3>
-<p>Verify the filter with simulated data with known spikes:</p>
+</section>
+<section id="grenerate-virtual-recipe-steps" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="grenerate-virtual-recipe-steps"><span class="header-section-number">3.3</span> Grenerate Virtual Recipe Steps</h2>
+<p><img src="./man/figures/lifecycle-maturing.svg" class="img-fluid"></p>
+<p>The following is an automated procedure that cleans and segments the signal into idle, torsion coil, and impulse responses observed during operation.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">1000</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>imp_sig <span class="ot">&lt;-</span> <span class="fu">rpois</span>(<span class="fu">length</span>(t), <span class="at">lambda =</span> <span class="fl">0.1</span>) </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>imp_sig_damp <span class="ot">&lt;-</span> imp_sig <span class="sc">*</span> <span class="fl">0.01</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>signal <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fl">0.2</span> <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">*</span><span class="fu">exp</span>(<span class="sc">-</span>t)) <span class="sc">+</span> imp_sig_damp</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>mmed <span class="ot">&lt;-</span> <span class="cf">function</span>(x,<span class="at">n=</span><span class="dv">9</span>){<span class="fu">runmed</span>(x,n)} </span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>signal_fil <span class="ot">&lt;-</span> <span class="fu">mmed</span>(signal) </span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>d_med <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Original =</span> signal,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Filtered =</span> signal_fil</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">t =</span> <span class="fu">seq_along</span>(Original)) <span class="sc">%&gt;%</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(Original, Filtered)) <span class="sc">|&gt;</span> </span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">fct_relevel</span>(name, <span class="fu">c</span>(<span class="st">"Original"</span>, <span class="st">"Filtered"</span>)))</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>d_med <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(t, value)) <span class="sc">+</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>name) <span class="sc">+</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Median Filter Test on a Gompertz Curve"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">z_smo =</span> <span class="fu">loess</span>(z <span class="sc">~</span> time, <span class="at">span =</span> <span class="fl">0.1</span>)<span class="sc">$</span>fitted, </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">y_smo =</span> <span class="fu">loess</span>(y <span class="sc">~</span> time, <span class="at">span =</span> <span class="fl">0.1</span>)<span class="sc">$</span>fitted) </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>ts_data <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">pull</span>(z_smo) <span class="sc">|&gt;</span> <span class="fu">ts</span>()</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(z, z_smo, y, y_smo)) <span class="sc">|&gt;</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, value)) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>name) <span class="sc">+</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Signal Smoothing"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="preprocessing_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
-</section>
-<section id="filter-data" class="level3" data-number="5.0.2">
-<h3 data-number="5.0.2" class="anchored" data-anchor-id="filter-data"><span class="header-section-number">5.0.2</span> Filter Data</h3>
-<p>The choice of n should be the minimum odd value that will produce the final segmentation on the baseline signal.</p>
+<section id="extract-torsion-coil-response" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="extract-torsion-coil-response"><span class="header-section-number">3.3.1</span> Extract Torsion Coil Response</h3>
+<p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
+<p>The following is a machine learning method to isolate the torsion coil unwinding and winding scenarios.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(x, y, z), <span class="sc">~</span><span class="fu">mmed</span>(<span class="at">x =</span> ., <span class="at">n =</span> <span class="dv">5</span>)))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_ad</span>() <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Median Filtered Signal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="preprocessing_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="768"></p>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm1</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pylab <span class="im">as</span> plt</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn <span class="im">import</span> linear_model, datasets</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Return the t-statistic for a given parameter estimate.</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tValLinR(close):</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># tValue from a linear trend</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.ones((close.shape[<span class="dv">0</span>], <span class="dv">2</span>))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    x[:, <span class="dv">1</span>] <span class="op">=</span> np.arange(close.shape[<span class="dv">0</span>])</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    ols <span class="op">=</span> sm1.OLS(close, x).fit()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ols.tvalues[<span class="dv">1</span>]</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> getBinsFromTrend(molecule, close, span):</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">    Derive labels from the sign of t-value of trend line</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">    output includes:</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">      - t1: End time for the identified trend</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">      - tVal: t-value associated with the estimated trend coefficient</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">      - bin: Sign of the trend</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">    The t-statistics for each tick has a different look-back window.</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">    - idx start time in look-forward window</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">    - dt1 stop time in look-forward window</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">    - df1 is the look-forward window</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">    - iloc ?</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> pd.DataFrame(index<span class="op">=</span>molecule, columns<span class="op">=</span>[<span class="st">'t1'</span>, <span class="st">'tVal'</span>, <span class="st">'bin'</span>, <span class="st">'windowSize'</span>])</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    hrzns <span class="op">=</span> <span class="bu">range</span>(<span class="op">*</span>span)</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    windowSize <span class="op">=</span> span[<span class="dv">1</span>] <span class="op">-</span> span[<span class="dv">0</span>]</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    maxWindow <span class="op">=</span> span[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    minWindow <span class="op">=</span> span[<span class="dv">0</span>]</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> idx <span class="kw">in</span> close.index:</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        idx <span class="op">+=</span> maxWindow</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> idx <span class="op">&gt;=</span> <span class="bu">len</span>(close):</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        df_tval <span class="op">=</span> pd.Series(dtype<span class="op">=</span><span class="st">'float64'</span>)</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        iloc0 <span class="op">=</span> close.index.get_loc(idx)</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if iloc0+max(hrzns) &gt; close.shape[0]:</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        <span class="co">#    continue</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> hrzn <span class="kw">in</span> hrzns:</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>            dt1 <span class="op">=</span> close.index[iloc0 <span class="op">-</span> hrzn <span class="op">+</span> <span class="dv">1</span>]</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>            df1 <span class="op">=</span> close.loc[dt1:idx]</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>            df_tval.loc[dt1] <span class="op">=</span> tValLinR(df1.values)  <span class="co"># calculates t-statistics on period</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>            dt1 <span class="op">=</span> df_tval.replace([<span class="op">-</span>np.inf, np.inf, np.nan],</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>                              <span class="dv">0</span>).<span class="bu">abs</span>().idxmax()  <span class="co"># get largest t-statistics calculated over span period</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print(df_tval.index[-1])</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print(dt1)</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print(abs(df_tval.values).argmax() + minWindow)</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>        out.loc[idx, [<span class="st">'t1'</span>, <span class="st">'tVal'</span>, <span class="st">'bin'</span>, <span class="st">'windowSize'</span>]] <span class="op">=</span> df_tval.index[<span class="op">-</span><span class="dv">1</span>], df_tval[dt1], np.sign(df_tval[dt1]), <span class="bu">abs</span>(</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>            df_tval.values).argmax() <span class="op">+</span> minWindow  <span class="co"># prevent leakage</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    out[<span class="st">'t1'</span>] <span class="op">=</span> pd.to_datetime(out[<span class="st">'t1'</span>])</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    out[<span class="st">'bin'</span>] <span class="op">=</span> pd.to_numeric(out[<span class="st">'bin'</span>], downcast<span class="op">=</span><span class="st">'signed'</span>)</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># deal with massive t-Value outliers - they dont provide more confidence and they ruin the scatter plot</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>    tValueVariance <span class="op">=</span> out[<span class="st">'tVal'</span>].values.var()</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>    tMax <span class="op">=</span> <span class="dv">20</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> tValueVariance <span class="op">&lt;</span> tMax:</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>        tMax <span class="op">=</span> tValueVariance</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>    out.loc[out[<span class="st">'tVal'</span>] <span class="op">&gt;</span> tMax, <span class="st">'tVal'</span>] <span class="op">=</span> tMax  <span class="co"># cutoff tValues &gt; 20</span></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>    out.loc[out[<span class="st">'tVal'</span>] <span class="op">&lt;</span> (<span class="op">-</span><span class="dv">1</span>) <span class="op">*</span> tMax, <span class="st">'tVal'</span>] <span class="op">=</span> (<span class="op">-</span><span class="dv">1</span>) <span class="op">*</span> tMax  <span class="co"># cutoff tValues &lt; -20</span></span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out.dropna(subset<span class="op">=</span>[<span class="st">'bin'</span>])</span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>idx_range_from <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>idx_range_to <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>df0 <span class="op">=</span> pd.Series(r.ts_data)</span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>span <span class="op">=</span> [idx_range_from,idx_range_to,<span class="dv">1</span>] <span class="co"># [3,10,1] = range(3,10)</span></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> getBinsFromTrend(df0.index, df0, span) </span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>tValues <span class="op">=</span> df1[<span class="st">'tVal'</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-</section>
-</section>
-<section id="grenerate-virtual-recipe-steps" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Grenerate Virtual Recipe Steps</h1>
-<p>Below is an automated procedure that cleans and segments the signal into “explainable” parts. It is easy to visualize the idle, torsion coil, and impulse responses from the signal.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">z_smo =</span> <span class="fu">loess</span>(z <span class="sc">~</span> time, <span class="at">span =</span> <span class="fl">0.1</span>)<span class="sc">$</span>fitted, </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">y_smo =</span> <span class="fu">loess</span>(y <span class="sc">~</span> time, <span class="at">span =</span> <span class="fl">0.1</span>)<span class="sc">$</span>fitted) </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>ts_data <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">pull</span>(z_smo) <span class="sc">|&gt;</span> <span class="fu">ts</span>()</span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>d_f <span class="ot">&lt;-</span> py<span class="sc">$</span>df1 <span class="sc">|&gt;</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"id"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(tVal) </span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(z, z_smo, y, y_smo)) <span class="sc">|&gt;</span> </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, value)) <span class="sc">+</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>name) <span class="sc">+</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Smoothed Signal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>d_fmerg <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"id"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(d_f) <span class="sc">|&gt;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">fill</span>(bin, <span class="at">.direction =</span> <span class="st">"downup"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">as.numeric</span>(id)) <span class="sc">|&gt;</span> </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">run_id =</span> <span class="fu">consecutive_id</span>(bin)) <span class="sc">|&gt;</span> </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(run_id) <span class="sc">|&gt;</span> </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bin =</span> <span class="fu">ifelse</span>(<span class="fu">n</span>() <span class="sc">&lt;</span> <span class="dv">1000</span>, <span class="dv">0</span>, bin))</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>d_fmerg <span class="sc">|&gt;</span> </span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(id, z, <span class="at">col =</span> <span class="fu">as.factor</span>(bin))) <span class="sc">+</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"time (s)"</span>, </span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Calibrated Value"</span>, </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"Recipe Step"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="preprocessing_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
-<section id="extract-torsion-coil-response" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="extract-torsion-coil-response"><span class="header-section-number">6.1</span> Extract Torsion Coil Response</h2>
-<p>I am using a machine learning method to isolate the torsion coil unwinding and winding scenarios.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm1</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pylab <span class="im">as</span> plt</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn <span class="im">import</span> linear_model, datasets</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Return the t-statistic for a given parameter estimate.</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tValLinR(close):</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># tValue from a linear trend</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.ones((close.shape[<span class="dv">0</span>], <span class="dv">2</span>))</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    x[:, <span class="dv">1</span>] <span class="op">=</span> np.arange(close.shape[<span class="dv">0</span>])</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    ols <span class="op">=</span> sm1.OLS(close, x).fit()</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ols.tvalues[<span class="dv">1</span>]</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> getBinsFromTrend(molecule, close, span):</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">    Derive labels from the sign of t-value of trend line</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">    output includes:</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">      - t1: End time for the identified trend</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">      - tVal: t-value associated with the estimated trend coefficient</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">      - bin: Sign of the trend</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">    The t-statistics for each tick has a different look-back window.</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co">    - idx start time in look-forward window</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co">    - dt1 stop time in look-forward window</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="co">    - df1 is the look-forward window</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co">    - iloc ?</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> pd.DataFrame(index<span class="op">=</span>molecule, columns<span class="op">=</span>[<span class="st">'t1'</span>, <span class="st">'tVal'</span>, <span class="st">'bin'</span>, <span class="st">'windowSize'</span>])</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    hrzns <span class="op">=</span> <span class="bu">range</span>(<span class="op">*</span>span)</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    windowSize <span class="op">=</span> span[<span class="dv">1</span>] <span class="op">-</span> span[<span class="dv">0</span>]</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    maxWindow <span class="op">=</span> span[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    minWindow <span class="op">=</span> span[<span class="dv">0</span>]</span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> idx <span class="kw">in</span> close.index:</span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>        idx <span class="op">+=</span> maxWindow</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> idx <span class="op">&gt;=</span> <span class="bu">len</span>(close):</span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>        df_tval <span class="op">=</span> pd.Series(dtype<span class="op">=</span><span class="st">'float64'</span>)</span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>        iloc0 <span class="op">=</span> close.index.get_loc(idx)</span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if iloc0+max(hrzns) &gt; close.shape[0]:</span></span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>        <span class="co">#    continue</span></span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> hrzn <span class="kw">in</span> hrzns:</span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>            dt1 <span class="op">=</span> close.index[iloc0 <span class="op">-</span> hrzn <span class="op">+</span> <span class="dv">1</span>]</span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>            df1 <span class="op">=</span> close.loc[dt1:idx]</span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>            df_tval.loc[dt1] <span class="op">=</span> tValLinR(df1.values)  <span class="co"># calculates t-statistics on period</span></span>
-<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>            dt1 <span class="op">=</span> df_tval.replace([<span class="op">-</span>np.inf, np.inf, np.nan],</span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>                              <span class="dv">0</span>).<span class="bu">abs</span>().idxmax()  <span class="co"># get largest t-statistics calculated over span period</span></span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print(df_tval.index[-1])</span></span>
-<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print(dt1)</span></span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print(abs(df_tval.values).argmax() + minWindow)</span></span>
-<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>        out.loc[idx, [<span class="st">'t1'</span>, <span class="st">'tVal'</span>, <span class="st">'bin'</span>, <span class="st">'windowSize'</span>]] <span class="op">=</span> df_tval.index[<span class="op">-</span><span class="dv">1</span>], df_tval[dt1], np.sign(df_tval[dt1]), <span class="bu">abs</span>(</span>
-<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>            df_tval.values).argmax() <span class="op">+</span> minWindow  <span class="co"># prevent leakage</span></span>
-<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    out[<span class="st">'t1'</span>] <span class="op">=</span> pd.to_datetime(out[<span class="st">'t1'</span>])</span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    out[<span class="st">'bin'</span>] <span class="op">=</span> pd.to_numeric(out[<span class="st">'bin'</span>], downcast<span class="op">=</span><span class="st">'signed'</span>)</span>
-<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># deal with massive t-Value outliers - they dont provide more confidence and they ruin the scatter plot</span></span>
-<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    tValueVariance <span class="op">=</span> out[<span class="st">'tVal'</span>].values.var()</span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>    tMax <span class="op">=</span> <span class="dv">20</span></span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> tValueVariance <span class="op">&lt;</span> tMax:</span>
-<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>        tMax <span class="op">=</span> tValueVariance</span>
-<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>    out.loc[out[<span class="st">'tVal'</span>] <span class="op">&gt;</span> tMax, <span class="st">'tVal'</span>] <span class="op">=</span> tMax  <span class="co"># cutoff tValues &gt; 20</span></span>
-<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>    out.loc[out[<span class="st">'tVal'</span>] <span class="op">&lt;</span> (<span class="op">-</span><span class="dv">1</span>) <span class="op">*</span> tMax, <span class="st">'tVal'</span>] <span class="op">=</span> (<span class="op">-</span><span class="dv">1</span>) <span class="op">*</span> tMax  <span class="co"># cutoff tValues &lt; -20</span></span>
-<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out.dropna(subset<span class="op">=</span>[<span class="st">'bin'</span>])</span>
-<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>idx_range_from <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>idx_range_to <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>df0 <span class="op">=</span> pd.Series(r.ts_data)</span>
-<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>span <span class="op">=</span> [idx_range_from,idx_range_to,<span class="dv">1</span>] <span class="co"># [3,10,1] = range(3,10)</span></span>
-<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> getBinsFromTrend(df0.index, df0, span) </span>
-<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>tValues <span class="op">=</span> df1[<span class="st">'tVal'</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>d_f <span class="ot">&lt;-</span> py<span class="sc">$</span>df1 <span class="sc">|&gt;</span> </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"id"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(tVal) </span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>d_fmerg <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> </span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"id"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(d_f) <span class="sc">|&gt;</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">fill</span>(bin, <span class="at">.direction =</span> <span class="st">"downup"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">as.numeric</span>(id)) <span class="sc">|&gt;</span> </span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">run_id =</span> <span class="fu">consecutive_id</span>(bin)) <span class="sc">|&gt;</span> </span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(run_id) <span class="sc">|&gt;</span> </span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bin =</span> <span class="fu">ifelse</span>(<span class="fu">n</span>() <span class="sc">&lt;</span> <span class="dv">1000</span>, <span class="dv">0</span>, bin))</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>d_fmerg <span class="sc">|&gt;</span> </span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(id, z, <span class="at">col =</span> <span class="fu">as.factor</span>(bin))) <span class="sc">+</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"time (s)"</span>, </span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Calibrated Value"</span>, </span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"Recipe Step"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="preprocessing_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="768"></p>
-</div>
-</div>
-<p>Here is the nomenclature:</p>
+<p>Legend definitions:</p>
 <ul>
 <li>0 = horizontal or vertical position</li>
 <li>-1 = torsion coil winding</li>
 <li>1 = torsion coil unwinding</li>
 </ul>
 </section>
-<section id="extract-door-idle-response" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="extract-door-idle-response"><span class="header-section-number">6.2</span> Extract Door Idle Response</h2>
-<p>To extract information about whether the door is idle up or down, a simple dependent mixture model is used.</p>
+<section id="extract-door-idle-response" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="extract-door-idle-response"><span class="header-section-number">3.3.2</span> Extract Door Idle Response</h3>
+<p><img src="./man/figures/lifecycle-questioning.svg" class="img-fluid"></p>
+<p>The following is a dependent mixture model to detect when the door is idle.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(depmixS4)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>hmm_model <span class="ot">&lt;-</span> depmixS4<span class="sc">::</span><span class="fu">depmix</span>(<span class="at">data =</span> d_fmerg, <span class="at">nstates =</span> <span class="dv">2</span>, y_smo<span class="sc">~</span>y)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>hmm_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(hmm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(depmixS4)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>hmm_model <span class="ot">&lt;-</span> depmixS4<span class="sc">::</span><span class="fu">depmix</span>(<span class="at">data =</span> d_fmerg, <span class="at">nstates =</span> <span class="dv">2</span>, y_smo<span class="sc">~</span>y)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>hmm_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(hmm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; converged at iteration 21 with logLik: 40562</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hmm_fit@transition</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(ts(posterior(hmm_fit, type = "smoothing")), ylab = "probability", frame = FALSE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hmm_fit@transition</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(ts(posterior(hmm_fit, type = "smoothing")), ylab = "probability", frame = FALSE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="final-results" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="final-results"><span class="header-section-number">6.3</span> Final Results</h2>
+</section>
+<section id="final-results" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="final-results"><span class="header-section-number">3.4</span> Final Results</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>d_fmerg_final <span class="ot">&lt;-</span> d_fmerg <span class="sc">|&gt;</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="at">smo_prob =</span> <span class="fu">posterior</span>(hmm_fit, <span class="at">type =</span> <span class="st">"smoothing"</span>)[,<span class="dv">1</span>]) <span class="sc">|&gt;</span> </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bin_hmm =</span> <span class="fu">ifelse</span>(smo_prob <span class="sc">&gt;</span> <span class="fl">0.999</span>, <span class="st">"Transition"</span>, <span class="st">"Idle"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">run_idle_id =</span> <span class="fu">consecutive_id</span>(bin_hmm)) <span class="sc">|&gt;</span> </span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(run_idle_id) <span class="sc">|&gt;</span> </span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">numbers =</span> <span class="fu">n</span>(),</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">bin_hmm =</span> <span class="fu">ifelse</span>(<span class="fu">n</span>() <span class="sc">&lt;</span> <span class="dv">2000</span> , <span class="st">"Transition"</span>, bin_hmm)) <span class="sc">|&gt;</span> </span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">recipe_step =</span> <span class="fu">paste</span>(bin_hmm, bin))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>d_fmerg_final <span class="ot">&lt;-</span> d_fmerg <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="at">smo_prob =</span> <span class="fu">posterior</span>(hmm_fit, <span class="at">type =</span> <span class="st">"smoothing"</span>)[,<span class="dv">1</span>]) <span class="sc">|&gt;</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bin_hmm =</span> <span class="fu">ifelse</span>(smo_prob <span class="sc">&gt;</span> <span class="fl">0.999</span>, <span class="st">"Transition"</span>, <span class="st">"Idle"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">run_idle_id =</span> <span class="fu">consecutive_id</span>(bin_hmm)) <span class="sc">|&gt;</span> </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(run_idle_id) <span class="sc">|&gt;</span> </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">numbers =</span> <span class="fu">n</span>(),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">bin_hmm =</span> <span class="fu">ifelse</span>(<span class="fu">n</span>() <span class="sc">&lt;</span> <span class="dv">2000</span> , <span class="st">"Transition"</span>, bin_hmm)) <span class="sc">|&gt;</span> </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">recipe_step =</span> <span class="fu">paste</span>(bin_hmm, bin))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>d_fmerg_final <span class="sc">|&gt;</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(x, y, z)) <span class="sc">|&gt;</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, value, <span class="at">col =</span> <span class="fu">as.factor</span>(recipe_step))) <span class="sc">+</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>name) <span class="sc">+</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"time (s)"</span>,</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Acceleration (g)"</span>,</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"Recipe Step"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>d_fmerg_final <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(x, y, z)) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, value, <span class="at">col =</span> <span class="fu">as.factor</span>(recipe_step))) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>name) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"time (s)"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Acceleration (g)"</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"Recipe Step"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="preprocessing_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="768"></p>
+<p><img src="preprocessing_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
 <p>The unwinding the torsion coil (pink, door going up) generates a distinct signature compared to the opposite direction (green, door coming down).</p>
-<p>The shape of the signal comes from a constant rate of tilt around the corner track, which lead to exponentially decaying or growing solutions, consistent with the above signal.</p>
+<p>The shape of the signal comes from a constant rate of tilt around the corner track, which lead to exponentially decaying or growing solutions.</p>
 <p>The tilt of the garage door, denoted by ((t)) can be expressed by a the following first order differential equation:</p>
 <p><span class="math display">\[
 \frac{d\theta}{dt} = f(\theta, G, t)\
 \]</span></p>
-<p>where (f(, G, t)) represents the function describing the dynamics of the garage door, and G is the geometry of the system.</p>
-<p>For the simplest case of tilting about the origin (ignoring the geometry),</p>
+<p>where (f(, G, t)) represents the function describing the dynamics of the garage door, and G is the geometry of the system. This function is unknown, but can be expressed for the simplest case,</p>
 <p><span class="math display">\[
-\frac{d\theta}{dt} =\dot{\theta}\ = \theta
-\]</span> the solution is:</p>
-<p><span class="math display">\[
-\theta \ =  e^t
+\frac{d\theta}{dt} =\dot{\theta}\ = k\theta
 \]</span></p>
+<p>, which states that the rate of change of the angular position of the accelerometer Y and Z axis is proportional to the current angular position (<span class="math inline">\(\dot{\theta}/θ = k\)</span>). The general solution to this equation is</p>
+<p><span class="math display">\[
+\theta \ =  Ce^{kt}
+\]</span> , where C is a constant that depends on the initial conditions of the system. This is one of the reasons why the adjustment for the angle sweep using the adjustable mount is important.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -753,7 +726,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./calibration.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calibration</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Installation and Calibration</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

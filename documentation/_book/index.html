@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Chris Dissanayake">
-<meta name="dcterms.date" content="2023-07-14">
+<meta name="dcterms.date" content="2023-07-17">
 
 <title>Garage Door Prognostics and Health Management</title>
 <style>
@@ -152,7 +152,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./calibration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calibration</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Installation and Calibration</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -170,7 +170,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./datacollection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Stored Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -220,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 14, 2023</p>
+      <p class="date">July 17, 2023</p>
     </div>
   </div>
   
@@ -234,9 +234,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 class="unnumbered">Introduction</h1>
 <p><span style="color: red; font-size: 20px;">Work in Progress</span></p>
 <p>Welcome to the documentation for the “Garage Door Prognostics” project.</p>
-<p>The sections are arranged by functionality.</p>
 <section id="system-configuration" class="level2">
 <h2 class="anchored" data-anchor-id="system-configuration">System Configuration</h2>
+<p><img src="./man/figures/lifecycle-experimental.svg" class="img-fluid"></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./images_for_document/ptype.jpg" class="img-fluid figure-img" style="width:49.7%"></p>
@@ -249,24 +249,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre class="mermaid mermaid-js">graph TB
 A(Accelerometer)--&gt;AA 
 
-subgraph Replace
+subgraph Future-Replace
 AA[Arduino]--&gt;E[Thin Client]
-style Replace fill:#f0f0f0,stroke:grey,stroke-width:2px
+style Future-Replace fill:#f0f0f0,stroke:grey,stroke-width:2px
 end
 
 E--&gt;F[AWS RDS]
-F--&gt;G(Dashboard &lt;/br&gt;Metrics, Sensor, Data Decisions)
-F--&gt;H[Decision Making]
-H--&gt;G
+F--&gt;FF[Decisions / Notifications]
+F--&gt;G("Dashboard &lt;/br&gt;(Metrics, Sensor Data,  Decisions)")
+FF-.-&gt;G
 GD(Garage Door) -.-&gt; A
-M(Calibration) -.-&gt; A
-style A fill:#B6E6E6
+style G fill:#B6E6E6
 style GD fill:salmon 
 style E stroke:blue,stroke-width:3px
 
 subgraph Thin-Client
 BB((Every &lt;/br&gt; 2 Hours))--&gt;CA[Gather Data]
-CA--&gt;CAA
 BB--&gt;CAA[Preprocess]
 CAA--&gt;CAAB{Door Activity?}
 CAAB--Yes--&gt;CBB[Run Models]
@@ -302,9 +300,11 @@ end
 </section>
 <section id="session-information" class="level2">
 <h2 class="anchored" data-anchor-id="session-information">Session Information</h2>
-<p>R info: R version 4.3.1 (2023-06-16) using the following packages: data.table (1.14.8, CRAN), ggforce (0.4.1, CRAN), gridExtra (2.3, CRAN), hht (2.1.6, CRAN), Hmisc (5.1-0, CRAN), janitor (2.2.0, CRAN), lubridate (1.9.2, CRAN), MSwM (1.5, CRAN), patchwork (1.1.2, CRAN), plotly (4.10.1, CRAN), scales (1.2.1, CRAN), tidyverse (2.0.0, CRAN), and zoo (1.8-12, CRAN).</p>
-<p>Rust info: rustc 1.68.2 (9eb3afe9e 2023-03-27)</p>
-<p>Python info: Python 3.9.13 using the following packages: (_ipyw_jlab_nb_ext_conf0.1.0), (_libgcc_mutex0.1), (_openmp_mutex5.1), (alabaster0.7.12), (anaconda2022.10), (anaconda-client1.11.0), (anaconda-navigator2.3.2), (anaconda-project0.11.1), (anyio3.5.0), (appdirs1.4.4), (argon2-cffi21.3.0), (argon2-cffi-bindings21.2.0), (arrow1.2.2), (astroid2.11.7), (astropy5.1), (atomicwrites1.4.0), (attrs21.4.0), (automat20.2.0), (autopep81.6.0), (babel2.9.1), (backcall0.2.0), (backports1.1), (backports.functools_lru_cache1.6.4), (backports.tempfile1.0), (backports.weakref1.0.post1), (bcrypt3.2.0), (beautifulsoup44.11.1), (binaryornot0.4.4), (bitarray2.5.1), (bkcharts0.2), (black22.6.0), (blas1.0), (bleach4.1.0), (blosc1.21.0), (bokeh2.4.3), (boto31.24.28), (botocore1.27.28), (bottleneck1.3.5), (brotli1.0.9), (brotli-bin1.0.9), (brotlipy0.7.0), (brunsli0.1), (bzip21.0.8), (c-ares1.18.1), (ca-certificates2022.07.19), (certifi2022.9.14), (cffi1.15.1), (cfitsio3.470), (chardet4.0.0), (charls2.2.0), (charset-normalizer2.0.4), (click8.0.4), (cloudpickle2.0.0), (clyent1.2.2), (colorama0.4.5), (colorcet3.0.0), (conda23.1.0), (conda-build3.22.0), (conda-content-trust0.1.3), (conda-env2.6.0), (conda-pack0.6.0), (conda-package-handling1.9.0), (conda-repo-cli1.0.20), (conda-token0.4.0), (conda-verify3.4.2), (constantly15.1.0), (cookiecutter1.7.3), (cryptography37.0.1), (cssselect1.1.0), (curl7.84.0), (cycler0.11.0), (cython0.29.32), (cytoolz0.11.0), (daal4py2021.6.0), (dal2021.6.0), (dask2022.7.0), (dask-core2022.7.0), (dataclasses0.8), (datashader0.14.1), (datashape0.5.4), (dbus1.13.18), (debugpy1.5.1), (decorator5.1.1), (defusedxml0.7.1), (diff-match-patch20200713), (dill0.3.4), (distributed2022.7.0), (docutils0.18.1), (entrypoints0.4), (et_xmlfile1.1.0), (expat2.4.9), (fftw3.3.9), (filelock3.6.0), (flake84.0.1), (flask1.1.2), (fontconfig2.13.1), (fonttools4.25.0), (freetype2.11.0), (fsspec2022.7.1), (future0.18.2), (gensim4.1.2), (giflib5.2.1), (glib2.69.1), (glob20.7), (gmp6.2.1), (gmpy22.1.2), (greenlet1.1.1), (gst-plugins-base1.14.0), (gstreamer1.14.0), (h5py3.7.0), (hdf51.10.6), (heapdict1.0.1), (holoviews1.15.0), (hvplot0.8.0), (hyperlink21.0.0), (icu58.2), (idna3.3), (imagecodecs2021.8.26), (imageio2.19.3), (imagesize1.4.1), (importlib-metadata4.11.3), (importlib_metadata4.11.3), (incremental21.3.0), (inflection0.5.1), (iniconfig1.1.1), (intake0.6.5), (intel-openmp2021.4.0), (intervaltree3.1.0), (ipykernel6.15.2), (ipython7.31.1), (ipython_genutils0.2.0), (ipywidgets7.6.5), (isort5.9.3), (itemadapter0.3.0), (itemloaders1.0.4), (itsdangerous2.0.1), (jdcal1.4.1), (jedi0.18.1), (jeepney0.7.1), (jellyfish0.9.0), (jinja22.11.3), (jinja2-time0.2.0), (jmespath0.10.0), (joblib1.1.0), (jpeg9e), (jq1.6), (json50.9.6), (jsonschema4.16.0), (jupyter1.0.0), (jupyter_client7.3.4), (jupyter_console6.4.3), (jupyter_core4.11.1), (jupyter_server1.18.1), (jupyterlab3.4.4), (jupyterlab_pygments0.1.2), (jupyterlab_server2.10.3), (jupyterlab_widgets1.0.0), (jxrlib1.1), (keyring23.4.0), (kiwisolver1.4.2), (krb51.19.2), (lazy-object-proxy1.6.0), (lcms22.12), (ld_impl_linux-642.38), (lerc3.0), (libaec1.0.4), (libarchive3.6.1), (libbrotlicommon1.0.9), (libbrotlidec1.0.9), (libbrotlienc1.0.9), (libclang10.0.1), (libcurl7.84.0), (libdeflate1.8), (libedit3.1.20210910), (libev4.33), (libevent2.1.12), (libffi3.3), (libgcc-ng11.2.0), (libgfortran-ng11.2.0), (libgfortran511.2.0), (libgomp11.2.0), (libidn22.3.2), (liblief0.11.5), (libllvm1010.0.1), (libllvm1111.1.0), (libnghttp21.46.0), (libpng1.6.37), (libpq12.9), (libsodium1.0.18), (libspatialindex1.9.3), (libssh21.10.0), (libstdcxx-ng11.2.0), (libtiff4.4.0), (libunistring0.9.10), (libuuid1.0.3), (libwebp1.2.2), (libwebp-base1.2.2), (libxcb1.15), (libxkbcommon1.0.1), (libxml22.9.14), (libxslt1.1.35), (libzopfli1.0.3), (llvmlite0.38.0), (locket1.0.0), (lxml4.9.1), (lz43.1.3), (lz4-c1.9.3), (lzo2.10), (markdown3.3.4), (markupsafe2.0.1), (matplotlib3.5.2), (matplotlib-base3.5.2), (matplotlib-inline0.1.6), (mccabe0.7.0), (mistune0.8.4), (mkl2021.4.0), (mkl-service2.4.0), (mkl_fft1.3.1), (mkl_random1.2.2), (mock4.0.3), (mpc1.1.0), (mpfr4.0.2), (mpi1.0), (mpich3.3.2), (mpmath1.2.1), (msgpack-python1.0.3), (multipledispatch0.6.0), (munkres1.1.4), (mypy_extensions0.4.3), (navigator-updater0.3.0), (nbclassic0.3.5), (nbclient0.5.13), (nbconvert6.4.4), (nbformat5.5.0), (ncurses6.3), (nest-asyncio1.5.5), (networkx2.8.4), (nltk3.7), (nose1.3.7), (notebook6.4.12), (nspr4.33), (nss3.74), (numba0.55.1), (numexpr2.8.3), (numpy1.21.5), (numpy-base1.21.5), (numpydoc1.4.0), (olefile0.46), (oniguruma6.9.7.1), (openjpeg2.4.0), (openpyxl3.0.10), (openssl1.1.1q), (packaging21.3), (pandas1.4.4), (pandocfilters1.5.0), (panel0.13.1), (param1.12.0), (parsel1.6.0), (parso0.8.3), (partd1.2.0), (patch2.7.6), (patchelf0.13), (pathlib1.0.1), (pathspec0.9.0), (patsy0.5.2), (pcre8.45), (pep81.7.1), (pexpect4.8.0), (pickleshare0.7.5), (pillow9.2.0), (pip22.2.2), (pkginfo1.8.2), (platformdirs2.5.2), (plotly5.9.0), (pluggy1.0.0), (ply3.11), (poyo0.5.0), (prometheus_client0.14.1), (prompt-toolkit3.0.20), (prompt_toolkit3.0.20), (protego0.1.16), (psutil5.9.0), (ptyprocess0.7.0), (py1.11.0), (py-lief0.11.5), (pyasn10.4.8), (pyasn1-modules0.2.8), (pycodestyle2.8.0), (pycosat0.6.3), (pycparser2.21), (pyct0.4.8), (pycurl7.45.1), (pydispatcher2.0.5), (pydocstyle6.1.1), (pyerfa2.0.0), (pyflakes2.4.0), (pygments2.11.2), (pyhamcrest2.0.2), (pyjwt2.4.0), (pylint2.14.5), (pyls-spyder0.4.0), (pyodbc4.0.34), (pyopenssl22.0.0), (pyparsing3.0.9), (pyqt5.15.7), (pyqt5-sip12.11.0), (pyqtwebengine5.15.7), (pyrsistent0.18.0), (pysocks1.7.1), (pytables3.6.1), (pytest7.1.2), (python3.9.13), (python-dateutil2.8.2), (python-fastjsonschema2.16.2), (python-libarchive-c2.9), (python-lsp-black1.2.1), (python-lsp-jsonrpc1.0.0), (python-lsp-server1.5.0), (python-slugify5.0.2), (python-snappy0.6.0), (pytz2022.1), (pyviz_comms2.0.2), (pywavelets1.3.0), (pyxdg0.27), (pyyaml6.0), (pyzmq23.2.0), (qdarkstyle3.0.2), (qstylizer0.1.10), (qt5.15.9), (qt-main5.15.2), (qt-webengine5.15.9), (qtawesome1.0.3), (qtconsole5.3.2), (qtpy2.2.0), (qtwebkit5.212), (queuelib1.5.0), (readline8.1.2), (regex2022.7.9), (requests2.28.1), (requests-file1.5.1), (ripgrep13.0.0), (rope0.22.0), (rtree0.9.7), (ruamel.yaml0.17.21), (ruamel.yaml.clib0.2.6), (ruamel_yaml0.15.100), (s3transfer0.6.0), (scikit-image0.19.2), (scikit-learn1.0.2), (scikit-learn-intelex2021.6.0), (scipy1.9.1), (scrapy2.6.2), (seaborn0.11.2), (secretstorage3.3.1), (send2trash1.8.0), (service_identity18.1.0), (setuptools63.4.1), (sip6.6.2), (six1.16.0), (sklearn0.0.post4), (smart_open5.2.1), (snappy1.1.9), (sniffio1.2.0), (snowballstemmer2.2.0), (sortedcollections2.1.0), (sortedcontainers2.4.0), (soupsieve2.3.1), (sphinx5.0.2), (sphinxcontrib-applehelp1.0.2), (sphinxcontrib-devhelp1.0.2), (sphinxcontrib-htmlhelp2.0.0), (sphinxcontrib-jsmath1.0.1), (sphinxcontrib-qthelp1.0.3), (sphinxcontrib-serializinghtml1.1.5), (spyder5.3.3), (spyder-kernels2.3.3), (sqlalchemy1.4.39), (sqlite3.39.3), (statsmodels0.13.2), (sympy1.10.1), (tabulate0.8.10), (tbb2021.6.0), (tbb4py2021.6.0), (tblib1.7.0), (tenacity8.0.1), (terminado0.13.1), (testpath0.6.0), (text-unidecode1.3), (textdistance4.2.1), (threadpoolctl2.2.0), (three-merge0.1.1), (tifffile2021.7.2), (tinycss0.4), (tk8.6.12), (tldextract3.2.0), (toml0.10.2), (tomli2.0.1), (tomlkit0.11.1), (toolz0.11.2), (tornado6.1), (tqdm4.64.1), (traitlets5.1.1), (twisted22.2.0), (typing-extensions4.3.0), (typing_extensions4.3.0), (tzdata2022c), (ujson5.4.0), (unidecode1.2.0), (unixodbc2.3.11), (urllib31.26.11), (w3lib1.21.0), (watchdog2.1.6), (wcwidth0.2.5), (webencodings0.5.1), (websocket-client0.58.0), (werkzeug2.0.3), (wget1.21.3), (whatthepatch1.0.2), (wheel0.37.1), (widgetsnbextension3.5.2), (wrapt1.14.1), (wurlitzer3.0.2), (xarray0.20.1), (xlrd2.0.1), (xlsxwriter3.0.3), (xz5.2.6), (yaml0.2.5), (yapf0.31.0), (zeromq4.3.4), (zfp0.5.5), (zict2.1.0), (zipp3.8.0), (zlib1.2.12), (zope1.0), (zope.interface5.4.0), (zstd1.5.2).</p>
+<p>Everything on this documentation is reproducible. The code and data are <a href="https://github.com/chrisdissanayake/garage_phm">here</a>.</p>
+<p><strong>R:</strong> R version 4.3.1 (2023-06-16)</p>
+<p><strong>Rust:</strong> rustc 1.68.2 (9eb3afe9e 2023-03-27)</p>
+<p><strong>Python:</strong> Python 3.9.13</p>
+<p><strong>C++:</strong> gcc (Ubuntu 11.3.0-1ubuntu1~22.04.1) 11.3.0, Copyright (C) 2021 Free Software Foundation, Inc., This is free software; see the source for copying conditions. There is NO, warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.,</p>
 
 
 </section>

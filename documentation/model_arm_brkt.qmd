@@ -8,6 +8,7 @@ source("_common.R")
 ```
 
 ## Hilbert Huang Transform
+![](./man/figures/lifecycle-stable.svg)
 
 ```{r}
 imf_ener <- function(tbl, meas_fn = "x") {
@@ -39,6 +40,7 @@ imf_ener <- function(tbl, meas_fn = "x") {
 ```
 
 ## Fit HMM
+![](./man/figures/lifecycle-stable.svg)
 
 ```{r}
 get_mm_results <- function(tf_loc_id, meas_fn) {
@@ -166,6 +168,7 @@ get_model_fails <- function(path, loc_id, prob_thres, daysback, model, meas_fn, 
 ```
 
 ## Evaluate Fit
+![](./man/figures/lifecycle-maturing.svg)
 
 ```{r}
 retrieve_model_obj <- function(path, loc_id, model, meas_fn) {
@@ -216,6 +219,8 @@ filter_fault_freq_group <- function(tbl, groups = c("fac", "tool_name"), number_
 
 
 ## Chapman-Kolmogorov 
+
+![](./man/figures/lifecycle-questioning.svg)
 
 ```{r}
 calc_trans_mat <- function(path, loc_id, model, meas_fn, t_steps = 1L) {

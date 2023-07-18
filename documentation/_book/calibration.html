@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Garage Door Prognostics and Health Management - 2&nbsp; Calibration</title>
+<title>Garage Door Prognostics and Health Management - 2&nbsp; Installation and Calibration</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -108,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./calibration.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calibration</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./calibration.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Installation and Calibration</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -148,7 +148,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./calibration.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calibration</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Installation and Calibration</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -166,7 +166,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./datacollection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Stored Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -187,11 +187,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#adxl335" id="toc-adxl335" class="nav-link active" data-scroll-target="#adxl335"><span class="header-section-number">2.1</span> ADXL335</a></li>
   <li><a href="#preliminary-calibration" id="toc-preliminary-calibration" class="nav-link" data-scroll-target="#preliminary-calibration"><span class="header-section-number">2.2</span> Preliminary Calibration</a></li>
-  <li><a href="#tilt-orientation-calibration" id="toc-tilt-orientation-calibration" class="nav-link" data-scroll-target="#tilt-orientation-calibration"><span class="header-section-number">2.3</span> Tilt Orientation Calibration</a>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation"><span class="header-section-number">2.3</span> Installation</a>
   <ul class="collapse">
-  <li><a href="#install-adjustable-mount" id="toc-install-adjustable-mount" class="nav-link" data-scroll-target="#install-adjustable-mount"><span class="header-section-number">2.3.1</span> Install Adjustable Mount</a></li>
-  <li><a href="#run-algorithm" id="toc-run-algorithm" class="nav-link" data-scroll-target="#run-algorithm"><span class="header-section-number">2.3.2</span> Run Algorithm</a></li>
-  <li><a href="#evaluate-results" id="toc-evaluate-results" class="nav-link" data-scroll-target="#evaluate-results"><span class="header-section-number">2.3.3</span> Evaluate Results</a></li>
+  <li><a href="#thin-client" id="toc-thin-client" class="nav-link" data-scroll-target="#thin-client"><span class="header-section-number">2.3.1</span> Thin Client</a></li>
+  <li><a href="#arduino" id="toc-arduino" class="nav-link" data-scroll-target="#arduino"><span class="header-section-number">2.3.2</span> Arduino</a></li>
+  <li><a href="#install-adjustable-mount" id="toc-install-adjustable-mount" class="nav-link" data-scroll-target="#install-adjustable-mount"><span class="header-section-number">2.3.3</span> Install Adjustable Mount</a></li>
+  </ul></li>
+  <li><a href="#tilt-orientation-adjustment" id="toc-tilt-orientation-adjustment" class="nav-link" data-scroll-target="#tilt-orientation-adjustment"><span class="header-section-number">2.4</span> Tilt Orientation Adjustment</a>
+  <ul class="collapse">
+  <li><a href="#mutual-infrmation" id="toc-mutual-infrmation" class="nav-link" data-scroll-target="#mutual-infrmation"><span class="header-section-number">2.4.1</span> Mutual Infrmation</a></li>
+  <li><a href="#tilt-angle-sweep" id="toc-tilt-angle-sweep" class="nav-link" data-scroll-target="#tilt-angle-sweep"><span class="header-section-number">2.4.2</span> Tilt Angle Sweep</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -201,7 +206,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calibration</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Installation and Calibration</span></h1>
 </div>
 
 
@@ -223,6 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="preliminary-calibration" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="preliminary-calibration"><span class="header-section-number">2.2</span> Preliminary Calibration</h2>
+<p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
 <p>The calibration procedure is highlighted <a href="https://learn.adafruit.com/adxl345-digital-accelerometer/programming" target="_blank">here</a>. This also serves the purpose of verifying the functionality of the accelerometer.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;math.h&gt;</span></span>
@@ -294,46 +300,59 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="tilt-orientation-calibration" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="tilt-orientation-calibration"><span class="header-section-number">2.3</span> Tilt Orientation Calibration</h2>
-<p>The door moves is relative to the left and right tracks, and this can cause many problems if the accelerometer is not positioned correctly.</p>
-<section id="install-adjustable-mount" class="level3" data-number="2.3.1">
-<h3 data-number="2.3.1" class="anchored" data-anchor-id="install-adjustable-mount"><span class="header-section-number">2.3.1</span> Install Adjustable Mount</h3>
-<p>The accelerometer mount is adjustable, and can be installed closer to the arm bracket, the closer the better. The reference tilt angle (<code>tilt_fc</code>) can be adjusted by loosening the M3 screws.</p>
+<section id="installation" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="installation"><span class="header-section-number">2.3</span> Installation</h2>
+<section id="thin-client" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="thin-client"><span class="header-section-number">2.3.1</span> Thin Client</h3>
+</section>
+<section id="arduino" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="arduino"><span class="header-section-number">2.3.2</span> Arduino</h3>
+</section>
+<section id="install-adjustable-mount" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="install-adjustable-mount"><span class="header-section-number">2.3.3</span> Install Adjustable Mount</h3>
+<p>The accelerometer mount should be installed closer to the arm bracket, the closer the better.</p>
 <div>
 <figure class="figure">
 <img src="./images_for_document/adxl335-mnt.png" width="49.7%" class="figure-img"> <img src="./images_for_document/adxl335-mnt2.jpg" width="49.7%" class="figure-img">
 </figure>
 </div>
-<p>Here are three outputs for three angles, -17 deg (CCW), 0 deg, and 17 deg (CW).</p>
+</section>
+</section>
+<section id="tilt-orientation-adjustment" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="tilt-orientation-adjustment"><span class="header-section-number">2.4</span> Tilt Orientation Adjustment</h2>
+<p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"> The accelerometer mount is adjustable, and the reference tilt angle (<code>tilt_fc</code>, above) can be adjusted by loosening the M3 screws.</p>
+<p>The door moves relative to the left and right tracks, and this can cause problems to the “Track” failure model if the accelerometer is not positioned correctly. Here are three outputs for three angles, -17 deg (CCW), 0 deg, and 17 deg (CW).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>p_1 <span class="ot">&lt;-</span> <span class="fu">pre_proc_tbl</span>(<span class="st">"angle-ccw17"</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_ad</span>() <span class="sc">+</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"-17 deg"</span>) <span class="sc">+</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>p_2 <span class="ot">&lt;-</span> <span class="fu">pre_proc_tbl</span>(<span class="st">"2023-06-10_garagedoor-1"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_ad</span>() <span class="sc">+</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"0 deg"</span>) <span class="sc">+</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>p_3 <span class="ot">&lt;-</span> <span class="fu">pre_proc_tbl</span>(<span class="st">"angle-cw17"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_ad</span>() <span class="sc">+</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"+17 deg"</span>) <span class="sc">+</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p_1 <span class="sc">/</span>p_2<span class="sc">/</span> p_3 </span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>gt <span class="ot">&lt;-</span> patchwork<span class="sc">::</span><span class="fu">patchworkGrob</span>(p)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>gridExtra<span class="sc">::</span><span class="fu">grid.arrange</span>(gt, <span class="at">left =</span> <span class="st">"Acceleration (g)"</span>, <span class="at">bottom =</span> <span class="st">"time (s)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">col =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>p_2 <span class="ot">&lt;-</span> <span class="fu">pre_proc_tbl</span>(<span class="st">"2023-06-10_garagedoor-1"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_ad</span>() <span class="sc">+</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"0 deg"</span>) <span class="sc">+</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">col =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>p_3 <span class="ot">&lt;-</span> <span class="fu">pre_proc_tbl</span>(<span class="st">"angle-cw17"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_ad</span>() <span class="sc">+</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"+17 deg"</span>) <span class="sc">+</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">col =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p_1 <span class="sc">/</span>p_2<span class="sc">/</span> p_3 </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>gt <span class="ot">&lt;-</span> patchwork<span class="sc">::</span><span class="fu">patchworkGrob</span>(p)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>gridExtra<span class="sc">::</span><span class="fu">grid.arrange</span>(gt, <span class="at">left =</span> <span class="st">"Acceleration (g)"</span>, <span class="at">bottom =</span> <span class="st">"time (s)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="calibration_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
-</section>
-<section id="run-algorithm" class="level3" data-number="2.3.2">
-<h3 data-number="2.3.2" class="anchored" data-anchor-id="run-algorithm"><span class="header-section-number">2.3.2</span> Run Algorithm</h3>
-<p>The following procedure is a solution to this problem, proposed to exploit the nonlinear dependence between sensor variables, namely x-y and x-z. The solution also works without any preprocessing, which is also an advantage.</p>
+<p>It is impossible to see any difference between these signals other than for x. Fixing x to the 0g position is not ideal because that is not how the tracks and door are positioned.</p>
+<section id="mutual-infrmation" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="mutual-infrmation"><span class="header-section-number">2.4.1</span> Mutual Infrmation</h3>
+<p>The following procedure is a solution to this problem by to exploiting the nonlinear dependence between sensor variables, namely x-y and x-z. The solution also works without any preprocessing, which is also an advantage.</p>
 <p>Below is an example calculation for the mutual information between x and y for the signal at 0 degrees. A lower value indicates better “alignment”.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">pre_proc_tbl</span>(<span class="st">"2023-06-10_garagedoor-1"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -383,9 +402,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="evaluate-results" class="level3" data-number="2.3.3">
-<h3 data-number="2.3.3" class="anchored" data-anchor-id="evaluate-results"><span class="header-section-number">2.3.3</span> Evaluate Results</h3>
-<p>To determine the most optimal angle, a sweep needs to be done at varying increments. Typically, this is done within a range of approximately ±10 degrees.</p>
+<section id="tilt-angle-sweep" class="level3" data-number="2.4.2">
+<h3 data-number="2.4.2" class="anchored" data-anchor-id="tilt-angle-sweep"><span class="header-section-number">2.4.2</span> Tilt Angle Sweep</h3>
+<p><img src="./man/figures/lifecycle-maturing.svg" class="img-fluid"></p>
+<p>To determine the most optimal angle, a sweep needs to be done at varying increments. Typically, this is done within a range of approximately ±10 degrees from zero.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>d_long <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../data/mu-i_angle_swp.csv"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"xy"</span>, <span class="st">"yz"</span>, <span class="st">"xz"</span>), <span class="at">names_to =</span> <span class="st">"name"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>)</span>

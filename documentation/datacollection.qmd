@@ -1,4 +1,6 @@
-# Query Data 
+# Query Stored Data 
+
+![](./man/figures/lifecycle-stable.svg)
 
 ```{r}
 #| results: "asis"
@@ -10,16 +12,16 @@ library(RPostgres)
 
 ```
 
-Data is stored in two AWS RDS databases. Please let me know if you have lost the credentials.
+Data is stored in two AWS RDS databases: 
 
-1. gd_phm_status : This has the model output information, hardware maintenance information, versioning, and configuration settings. 
+1. gd_phm_status: Model output information, hardware maintenance information, versioning, and configuration settings. 
 
-2. metrics : This hosts accuracy and reliability metrics for all my projects. The table for this project is called "gd_phm".
+2. metrics: This hosts accuracy and reliability metrics for many other projects. The table for this project is called "gd_phm".
 
 
-Shown below is a generic sequence of how one might pull data.
+## Example Workflow
 
-## Make a Connection
+### Make a Connection
 
 ```{r}
 con <- dbConnect(
@@ -32,7 +34,7 @@ con <- dbConnect(
 )
 ```
 
-## Get Relevant Table Names
+### Get Relevant Table Names
 
 ```{r}
 tbl <- DBI::dbGetQuery(
@@ -46,7 +48,8 @@ tbl <- DBI::dbGetQuery(
 tbl |> pull(table_name) |> cat(sep = ", ")
 ```
 
-## Pull Data
+### Get Data
+
 
 ```{r}
 tbl <- DBI::dbGetQuery(
@@ -91,7 +94,7 @@ tbl |> head(10)
 ```
 
 
-## Plot Data
+### Plot Data
 
 ```{r}
 tbl |> 
@@ -109,9 +112,9 @@ tbl |>
       )
 ```
 
-## Important! 
+### Important! 
 
-Please close the connection after you are done. 
+Please close the connection after querying. 
 
 ```{r}
 dbDisconnect(con)

@@ -22,14 +22,14 @@ Imports:
     ggforce,
     MSwM,
     Hmisc,
-    hht, 
-    zoo
+    hht,
+    zoo,
+    lifecycle
 Remotes:
     local::/pkgs/
 Encoding: UTF-8
 SystemRequirements: FFmpeg (>= 3.2); with at least libx264 and lame (mp3)
     drivers. Debian/Ubuntu: libavfilter-dev, Fedora/CentOS: ffmpeg-devel
     (via https://rpmfusion.org), MacOS Homebrew: ffmp
-
-
-
+RoxygenNote: 7.2.3
+Roxygen: list(markdown = TRUE)

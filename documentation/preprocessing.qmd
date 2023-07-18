@@ -6,46 +6,9 @@ source("_common.R")
 
 ```
 
-# Signal Data
+## Signal
 
-The function for initial data cleaning: 
-
-```{r}
-pre_proc_tbl <- function(file_name) {
-  d <- read_table(str_glue("../data/{file_name}.txt"), 
-                  col_types = cols(.default = "character", "X6" = col_skip()),
-                  skip = 10)
-  col_names <- c("time", "x", "y", "z", "tilt_fc", "tilt_tw")
-  d <- set_names(d, col_names)
-  
-  d <- d |> 
-    mutate_if(is.character, .funs = as.numeric) |> 
-    mutate(time = as.numeric(time), 
-           time = lubridate::milliseconds(time)) # for modeling, not for plotting 
-  
-  d <- d |> tidyr::drop_na()
-}
-
-```
-
-The function to plot the signal:
-
-```{r}
-plot_ad <- function(tbl) {
-  tbl |> 
-    pivot_longer(c("x", "y", "z")) |> 
-    mutate(time = seq_along(time)/1000) |> # in ms
-    ggplot(aes(time, value)) +
-    geom_point(size = 0.1) +
-    geom_line(alpha = 0.3) +
-    facet_wrap(~name) +
-    labs(x = "time (s)", 
-         y = "Acceleration (g)")
-}
-```
-
-
-Here is what a signal looks like for one complete cycle (please look at the landing page for the definition). 
+Shown below is a signal for one complete cycle. Note that the Acceleration of y axis, the axis that is pointing down, is not exactly at 1g. 
 
 ```{r}
 d <- pre_proc_tbl("2023-06-10_garagedoor-1") 
@@ -57,13 +20,15 @@ d |>
 ```
 
 
-# Median Filter 
+## Median Filter 
 
-The data has irregular spike patterns caused by the movement of the curved door arm. These serve no purpose other than to contaminate the signal, and therefore are removed using a simple filter. 
+![](./man/figures/lifecycle-maturing.svg)
+
+The data has irregular spike patterns caused by the slack of the curved door arm. A simple filter is used to remove them.
 
 ### Verify Filter
 
-Verify the filter with simulated data with known spikes:
+The choice of n should be the minimum odd value that will remove added spikes from the baseline signal.
 
 ```{r}
 set.seed(123)
@@ -75,7 +40,7 @@ signal <- exp(0.2 * -1*exp(-t)) + imp_sig_damp
 
 mmed <- function(x,n=9){runmed(x,n)} 
 
-signal_fil <- mmed(signal) 
+signal_fil <- mmed(signal, n = 7) 
 
 d_med <- tibble(
   Original = signal,
@@ -94,7 +59,7 @@ d_med |> ggplot(aes(t, value)) +
 
 ### Filter Data
 
-The choice of n should be the minimum odd value that will produce the final segmentation on the baseline signal.
+The choice of n should be the minimum odd value that will produce the final segmentation on the baseline signal. This parameter needs to be verified after any adjustment to the accelerometer or hardware during the qualification process.
 
 ```{r}
 d <- d |> mutate(across(c(x, y, z), ~mmed(x = ., n = 5)))
@@ -105,9 +70,11 @@ d |>
 ```
 
 
-# Grenerate Virtual Recipe Steps
+## Grenerate Virtual Recipe Steps
 
-Below is an automated procedure that cleans and segments the signal into "explainable" parts. It is easy to visualize the idle, torsion coil, and impulse responses from the signal. 
+![](./man/figures/lifecycle-maturing.svg)
+
+The following is an automated procedure that cleans and segments the signal into idle, torsion coil, and impulse responses observed during operation. 
 
 ```{r}
 d <- d |> 
@@ -121,12 +88,14 @@ d |>
   ggplot(aes(time, value)) +
   geom_point(size = 0.5) +
   facet_wrap(~name) +
-  labs(title = "Smoothed Signal")
+  labs(title = "Signal Smoothing")
 ```
 
-## Extract Torsion Coil Response
+### Extract Torsion Coil Response
 
-I am using a machine learning method to isolate the torsion coil unwinding and winding scenarios. 
+![](./man/figures/lifecycle-stable.svg)
+
+The following is a machine learning method to isolate the torsion coil unwinding and winding scenarios. 
 
 ```{python}
 import statsmodels.api as sm1
@@ -234,15 +203,18 @@ d_fmerg |>
 
 ```
 
-Here is the nomenclature:
+Legend definitions:
 
 - 0 =  horizontal or vertical position
 - -1 =  torsion coil winding 
 - 1 = torsion coil unwinding
 
-## Extract Door Idle Response
 
-To extract information about whether the door is idle up or down, a simple dependent mixture model is used.
+### Extract Door Idle Response
+
+![](./man/figures/lifecycle-questioning.svg)
+
+The following is a dependent mixture model to detect when the door is idle.
 
 ```{r}
 library(depmixS4)
@@ -285,7 +257,7 @@ d_fmerg_final |>
 
 The unwinding the torsion coil (pink, door going up) generates a distinct signature compared to the opposite direction (green, door coming down).
 
-The shape of the signal comes from a constant rate of tilt around the corner track, which lead to exponentially decaying or growing solutions, consistent with the above signal.
+The shape of the signal comes from a constant rate of tilt around the corner track, which lead to exponentially decaying or growing solutions.
 
 The tilt of the garage door, denoted by \(\theta(t)\) can be expressed by a the following first order differential equation:
 
@@ -293,21 +265,18 @@ $$
 \frac{d\theta}{dt} = f(\theta, G, t)\
 $$
 
-where \(f(\theta, G, t)\) represents the function describing the dynamics of the garage door, and G is the geometry of the system.  
-
-
-For the simplest case of tilting about the origin (ignoring the geometry),
+where \(f(\theta, G, t)\) represents the function describing the dynamics of the garage door, and G is the geometry of the system. This function is unknown, but can be expressed for the simplest case,
 
 $$
- \frac{d\theta}{dt} =\dot{\theta}\ = \theta 
-$$
-the solution is: 
-
-$$
-\theta \ =  e^t
+ \frac{d\theta}{dt} =\dot{\theta}\ = k\theta 
 $$
 
+, which states that the rate of change of the angular position of the accelerometer Y and Z axis is proportional to the current angular position ($\dot{\theta}/θ = k$). The general solution to this equation is
 
+$$
+\theta \ =  Ce^{kt}
+$$
+, where C is a constant that depends on the initial conditions of the system. This is one of the reasons why the adjustment for the angle sweep using the adjustable mount is important.
 
 
 

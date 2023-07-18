@@ -1,4 +1,4 @@
-# Calibration
+# Installation and Calibration
 
 ```{r}
 #| results: "asis"
@@ -15,6 +15,8 @@ The ADXL335 is a triaxial accelerometer with three analog outputs that correspon
 The technical datasheet for ADXL335 is [here](https://www.analog.com/media/en/technical-documentation/data-sheets/ADXL335.pdf).
 
 ## Preliminary Calibration
+
+![](./man/figures/lifecycle-stable.svg)
 
 The calibration procedure is highlighted [here](https://learn.adafruit.com/adxl345-digital-accelerometer/programming){target="_blank"}. This also serves the purpose of verifying the functionality of the accelerometer.
 
@@ -89,14 +91,15 @@ double tilt_fc, tilt_tw;
 }
 ```
 
+## Installation
 
-## Tilt Orientation Calibration
+### Thin Client
 
-The door moves is relative to the left and right tracks, and this can cause many problems if the accelerometer is not positioned correctly. 
+### Arduino
 
 ### Install Adjustable Mount
 
-The accelerometer mount is adjustable, and can be installed closer to the arm bracket, the closer the better. The reference tilt angle (`tilt_fc`) can be adjusted by loosening the M3 screws.
+The accelerometer mount should be installed closer to the arm bracket, the closer the better. 
 
 <div>
   <figure>
@@ -106,22 +109,29 @@ The accelerometer mount is adjustable, and can be installed closer to the arm br
 </div>
 
 
-Here are three outputs for three angles, -17 deg (CCW), 0 deg, and 17 deg (CW).
+## Tilt Orientation Adjustment
+![](./man/figures/lifecycle-stable.svg)
+The accelerometer mount is adjustable, and the reference tilt angle (`tilt_fc`, above) can be adjusted by loosening the M3 screws. 
+
+The door moves relative to the left and right tracks, and this can cause problems to the "Track" failure model if the accelerometer is not positioned correctly. Here are three outputs for three angles, -17 deg (CCW), 0 deg, and 17 deg (CW). 
 
 ```{r}
 p_1 <- pre_proc_tbl("angle-ccw17") |> 
   plot_ad() +
   labs(title = "-17 deg") +
+  geom_hline(yintercept = c(0, 1), col = "darkred") +
   theme(axis.title = element_blank())
 
 p_2 <- pre_proc_tbl("2023-06-10_garagedoor-1") |> 
   plot_ad() +
   labs(title = "0 deg") +
+  geom_hline(yintercept = c(0, 1), col = "darkred") +
   theme(axis.title = element_blank())
 
 p_3 <- pre_proc_tbl("angle-cw17") |> 
   plot_ad() +
   labs(title = "+17 deg") +
+  geom_hline(yintercept = c(0, 1), col = "darkred") +
   theme(axis.title = element_blank())
 
 p <- p_1 /p_2/ p_3 
@@ -131,10 +141,11 @@ gridExtra::grid.arrange(gt, left = "Acceleration (g)", bottom = "time (s)")
 
 ```
 
+It is impossible to see any difference between these signals other than for x. Fixing x to the 0g position is not ideal because that is not how the tracks and door are positioned.
 
-### Run Algorithm
+### Mutual Infrmation
 
-The following procedure is a solution to this problem, proposed to exploit the nonlinear dependence between sensor variables, namely x-y and x-z. The solution also works without any preprocessing, which is also an advantage. 
+The following procedure is a solution to this problem by to exploiting the nonlinear dependence between sensor variables, namely x-y and x-z. The solution also works without any preprocessing, which is also an advantage. 
 
 Below is an example calculation for the mutual information between x and y for the signal at 0 degrees. A lower value indicates better "alignment".
 
@@ -186,9 +197,11 @@ d
 ```
 
 
-### Evaluate Results
+### Tilt Angle Sweep
 
-To determine the most optimal angle, a sweep needs to be done at varying increments. Typically, this is done within a range of approximately ±10 degrees.
+![](./man/figures/lifecycle-maturing.svg)
+
+To determine the most optimal angle, a sweep needs to be done at varying increments. Typically, this is done within a range of approximately ±10 degrees from zero.
 
 ```{r}
 d_long <- read_csv("../data/mu-i_angle_swp.csv") %>%

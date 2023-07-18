@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Garage Door Prognostics and Health Management - 5&nbsp; Query Data</title>
+<title>Garage Door Prognostics and Health Management - 5&nbsp; Query Stored Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -108,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./datacollection.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./datacollection.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Stored Data</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -148,7 +148,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./calibration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calibration</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Installation and Calibration</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -166,7 +166,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./datacollection.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Stored Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -185,11 +185,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#make-a-connection" id="toc-make-a-connection" class="nav-link active" data-scroll-target="#make-a-connection"><span class="header-section-number">5.1</span> Make a Connection</a></li>
-  <li><a href="#get-relevant-table-names" id="toc-get-relevant-table-names" class="nav-link" data-scroll-target="#get-relevant-table-names"><span class="header-section-number">5.2</span> Get Relevant Table Names</a></li>
-  <li><a href="#pull-data" id="toc-pull-data" class="nav-link" data-scroll-target="#pull-data"><span class="header-section-number">5.3</span> Pull Data</a></li>
-  <li><a href="#plot-data" id="toc-plot-data" class="nav-link" data-scroll-target="#plot-data"><span class="header-section-number">5.4</span> Plot Data</a></li>
-  <li><a href="#important" id="toc-important" class="nav-link" data-scroll-target="#important"><span class="header-section-number">5.5</span> Important!</a></li>
+  <li><a href="#example-workflow" id="toc-example-workflow" class="nav-link active" data-scroll-target="#example-workflow"><span class="header-section-number">5.1</span> Example Workflow</a>
+  <ul class="collapse">
+  <li><a href="#make-a-connection" id="toc-make-a-connection" class="nav-link" data-scroll-target="#make-a-connection"><span class="header-section-number">5.1.1</span> Make a Connection</a></li>
+  <li><a href="#get-relevant-table-names" id="toc-get-relevant-table-names" class="nav-link" data-scroll-target="#get-relevant-table-names"><span class="header-section-number">5.1.2</span> Get Relevant Table Names</a></li>
+  <li><a href="#get-data" id="toc-get-data" class="nav-link" data-scroll-target="#get-data"><span class="header-section-number">5.1.3</span> Get Data</a></li>
+  <li><a href="#plot-data" id="toc-plot-data" class="nav-link" data-scroll-target="#plot-data"><span class="header-section-number">5.1.4</span> Plot Data</a></li>
+  <li><a href="#important" id="toc-important" class="nav-link" data-scroll-target="#important"><span class="header-section-number">5.1.5</span> Important!</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -198,7 +201,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Data</span></h1>
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Stored Data</span></h1>
 </div>
 
 
@@ -213,14 +216,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>Data is stored in two AWS RDS databases. Please let me know if you have lost the credentials.</p>
+<p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
+<p>Data is stored in two AWS RDS databases:</p>
 <ol type="1">
-<li><p>gd_phm_status : This has the model output information, hardware maintenance information, versioning, and configuration settings.</p></li>
-<li><p>metrics : This hosts accuracy and reliability metrics for all my projects. The table for this project is called “gd_phm”.</p></li>
+<li><p>gd_phm_status: Model output information, hardware maintenance information, versioning, and configuration settings.</p></li>
+<li><p>metrics: This hosts accuracy and reliability metrics for many other projects. The table for this project is called “gd_phm”.</p></li>
 </ol>
-<p>Shown below is a generic sequence of how one might pull data.</p>
-<section id="make-a-connection" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="make-a-connection"><span class="header-section-number">5.1</span> Make a Connection</h2>
+<section id="example-workflow" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="example-workflow"><span class="header-section-number">5.1</span> Example Workflow</h2>
+<section id="make-a-connection" class="level3" data-number="5.1.1">
+<h3 data-number="5.1.1" class="anchored" data-anchor-id="make-a-connection"><span class="header-section-number">5.1.1</span> Make a Connection</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  RPostgres<span class="sc">::</span><span class="fu">Postgres</span>(),</span>
@@ -232,8 +237,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="get-relevant-table-names" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="get-relevant-table-names"><span class="header-section-number">5.2</span> Get Relevant Table Names</h2>
+<section id="get-relevant-table-names" class="level3" data-number="5.1.2">
+<h3 data-number="5.1.2" class="anchored" data-anchor-id="get-relevant-table-names"><span class="header-section-number">5.1.2</span> Get Relevant Table Names</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">conn =</span> con,</span>
@@ -249,8 +254,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="pull-data" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="pull-data"><span class="header-section-number">5.3</span> Pull Data</h2>
+<section id="get-data" class="level3" data-number="5.1.3">
+<h3 data-number="5.1.3" class="anchored" data-anchor-id="get-data"><span class="header-section-number">5.1.3</span> Get Data</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">conn =</span> con,</span>
@@ -305,8 +310,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="plot-data" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="plot-data"><span class="header-section-number">5.4</span> Plot Data</h2>
+<section id="plot-data" class="level3" data-number="5.1.4">
+<h3 data-number="5.1.4" class="anchored" data-anchor-id="plot-data"><span class="header-section-number">5.1.4</span> Plot Data</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tbl <span class="sc">|&gt;</span> </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(meas_date <span class="sc">&lt;</span> <span class="fu">as.Date</span>(<span class="st">"2023-06-11"</span>)) <span class="sc">|&gt;</span> </span>
@@ -326,14 +331,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="important" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="important"><span class="header-section-number">5.5</span> Important!</h2>
-<p>Please close the connection after you are done.</p>
+<section id="important" class="level3" data-number="5.1.5">
+<h3 data-number="5.1.5" class="anchored" data-anchor-id="important"><span class="header-section-number">5.1.5</span> Important!</h3>
+<p>Please close the connection after querying.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
