@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Chris Dissanayake">
-<meta name="dcterms.date" content="2023-07-17">
+<meta name="dcterms.date" content="2023-07-24">
 
 <title>Garage Door Prognostics and Health Management</title>
 <style>
@@ -96,9 +96,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -146,7 +143,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./bom.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bill of Materials</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Material Tracking</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -175,6 +172,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./maintenance_tracking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Maintenance Tracking</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -191,7 +194,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
-  <li><a href="#system-configuration" id="toc-system-configuration" class="nav-link" data-scroll-target="#system-configuration">System Configuration</a></li>
   <li><a href="#note-on-code-folding" id="toc-note-on-code-folding" class="nav-link" data-scroll-target="#note-on-code-folding">Note on Code Folding</a></li>
   <li><a href="#session-information" id="toc-session-information" class="nav-link" data-scroll-target="#session-information">Session Information</a></li>
   </ul></li>
@@ -220,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 17, 2023</p>
+      <p class="date">July 24, 2023</p>
     </div>
   </div>
   
@@ -232,58 +234,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1 unnumbered">
 <h1 class="unnumbered">Introduction</h1>
-<p><span style="color: red; font-size: 20px;">Work in Progress</span></p>
-<p>Welcome to the documentation for the “Garage Door Prognostics” project.</p>
-<section id="system-configuration" class="level2">
-<h2 class="anchored" data-anchor-id="system-configuration">System Configuration</h2>
-<p><img src="./man/figures/lifecycle-experimental.svg" class="img-fluid"></p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./images_for_document/ptype.jpg" class="img-fluid figure-img" style="width:49.7%"></p>
-</figure>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<div>
-<pre class="mermaid mermaid-js">graph TB
-A(Accelerometer)--&gt;AA 
-
-subgraph Future-Replace
-AA[Arduino]--&gt;E[Thin Client]
-style Future-Replace fill:#f0f0f0,stroke:grey,stroke-width:2px
-end
-
-E--&gt;F[AWS RDS]
-F--&gt;FF[Decisions / Notifications]
-F--&gt;G("Dashboard &lt;/br&gt;(Metrics, Sensor Data,  Decisions)")
-FF-.-&gt;G
-GD(Garage Door) -.-&gt; A
-style G fill:#B6E6E6
-style GD fill:salmon 
-style E stroke:blue,stroke-width:3px
-
-subgraph Thin-Client
-BB((Every &lt;/br&gt; 2 Hours))--&gt;CA[Gather Data]
-BB--&gt;CAA[Preprocess]
-CAA--&gt;CAAB{Door Activity?}
-CAAB--Yes--&gt;CBB[Run Models]
-CAAB--No--&gt;CAAC(End)
-CBB--&gt;CB[Data / Results]
-style BB fill:salmon 
-style Thin-Client fill:#f0f0f0,stroke:blue,stroke-width:3px
-end
-
-</pre>
-</div>
-</div>
-</div>
-</div>
-</section>
+<p>Welcome to the <span style="color: red">work in progress</span> documentation for the “Garage Door PHM” project.</p>
+<p><strong>Objectives:</strong></p>
+<ol type="1">
+<li><p>Improve understanding of the product, system, and codebase: Efficiently make changes when I get things wrong.</p></li>
+<li><p>Troubleshoot issues: It is often easier to browse through a document, rather than scanning my notebooks and scripts.</p></li>
+<li><p>Change management and version control: Helps me keep track of the evolution of components.</p></li>
+<li><p>Knowledge sharing: This is my way of giving back to the people who allowed me into their garages. In many cases, the feedback helped me change my approach and make improvements.</p></li>
+</ol>
+<p>This is currently not the top priority for me. There are many other tasks that take precedence frequently.</p>
+<p>That being said, this will continue to evolve in between many changes I make for both hardware and software. I plan on spending a few hours every week here, which I think would ultimately benefit the project.</p>
 <section id="note-on-code-folding" class="level2">
 <h2 class="anchored" data-anchor-id="note-on-code-folding">Note on Code Folding</h2>
 <p>I will leave the code blocks open by default, but there will be instances where code folding would warrant. If this is the case, you could easily unfold them by clicking an arrow above the output.</p>
-<p>Here is an example:</p>
+<p>For example,</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -294,7 +258,7 @@ end
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"number of cylinders"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="768"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
 </section>
@@ -549,7 +513,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./bom.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bill of Materials</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Material Tracking</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

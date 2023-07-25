@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Garage Door Prognostics and Health Management - 1&nbsp; Material Tracking</title>
+<title>Garage Door Prognostics and Health Management - 6&nbsp; Maintenance Tracking</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -64,8 +30,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./calibration.html" rel="next">
-<link href="./index.html" rel="prev">
+<link href="./references.html" rel="next">
+<link href="./datacollection.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -96,16 +62,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
-<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
-<script src="site_libs/datatables-binding-0.28/datatables.js"></script>
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<link href="site_libs/dt-core-1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="site_libs/dt-core-1.13.4/css/jquery.dataTables.extra.css" rel="stylesheet">
-<script src="site_libs/dt-core-1.13.4/js/jquery.dataTables.min.js"></script>
-<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
-<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
-
 
 </head>
 
@@ -118,7 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./bom.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Material Tracking</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./maintenance_tracking.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Maintenance Tracking</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -151,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./bom.html" class="sidebar-item-text sidebar-link active">
+  <a href="./bom.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Material Tracking</span></span></a>
   </div>
 </li>
@@ -181,7 +137,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./maintenance_tracking.html" class="sidebar-item-text sidebar-link">
+  <a href="./maintenance_tracking.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Maintenance Tracking</span></span></a>
   </div>
 </li>
@@ -197,23 +153,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#qr-scanner" id="toc-qr-scanner" class="nav-link active" data-scroll-target="#qr-scanner"><span class="header-section-number">1.1</span> QR Scanner</a></li>
-  <li><a href="#bill-of-materials-bom-structure-report" id="toc-bill-of-materials-bom-structure-report" class="nav-link" data-scroll-target="#bill-of-materials-bom-structure-report"><span class="header-section-number">1.2</span> Bill of Materials (BOM) Structure Report</a></li>
-  <li><a href="#get-total-cost-per-installation" id="toc-get-total-cost-per-installation" class="nav-link" data-scroll-target="#get-total-cost-per-installation"><span class="header-section-number">1.3</span> Get Total Cost per Installation</a></li>
-  <li><a href="#plot-installed-parts" id="toc-plot-installed-parts" class="nav-link" data-scroll-target="#plot-installed-parts"><span class="header-section-number">1.4</span> Plot Installed Parts</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Material Tracking</span></h1>
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Maintenance Tracking</span></h1>
 </div>
 
 
@@ -228,91 +175,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="qr-scanner" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="qr-scanner"><span class="header-section-number">1.1</span> QR Scanner</h2>
-<p><img src="./man/figures/lifecycle-experimental.svg" class="img-fluid"></p>
-</section>
-<section id="bill-of-materials-bom-structure-report" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="bill-of-materials-bom-structure-report"><span class="header-section-number">1.2</span> Bill of Materials (BOM) Structure Report</h2>
-<p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
-<p>Each device has its own BOM structure report. When a QR reader is used to scan a device, this item will be listed on the landing page.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>file_list <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"../BOM/"</span>, <span class="at">pattern =</span> <span class="st">"BOM STRUCTURE REPORT – ALL LEVELS"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>bom_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (filename <span class="cf">in</span> file_list) {</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  location_id <span class="ot">&lt;-</span> stringr<span class="sc">::</span><span class="fu">str_extract</span>(filename, <span class="st">"[A-Z]</span><span class="sc">\\</span><span class="st">d{2}</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">d{2}(?=</span><span class="sc">\\</span><span class="st">.xlsx$)"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(filename, <span class="at">skip =</span> <span class="dv">6</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span><span class="fu">matches</span>(<span class="st">"^</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">."</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">location_id =</span> location_id) </span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  bom_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(bom_data, data)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>bom_data <span class="ot">&lt;-</span> bom_data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(location_id) </span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>bom_data <span class="sc">|&gt;</span> <span class="fu">filter</span>(location_id <span class="sc">==</span> <span class="st">"A00.01"</span>) <span class="sc">|&gt;</span> DT<span class="sc">::</span><span class="fu">datatable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-d5fe5e2991c5d51e9583" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-d5fe5e2991c5d51e9583">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12"],["A00.01","A00.01","A00.01","A00.01","A00.01","A00.01","A00.01","A00.01","A00.01","A00.01","A00.01","A00.01"],["01","01","01","01","02","01","01","01","01","01","01","01"],["GD-0001","GD-0003","GD-0004","GD-0005","GD-0006","GD-0007","GD-0008","GD-0009","GD-0010","GD-0011","GD-0012","GD-0013"],["000001","000001","000002","000001","000001","000002","000001","000001","000002","000002","000001","000001"],["AD335 Accelerometer","Arduino Uno WiFi R3, Board","Cable, USB- Printer 1 ft","Breadboard Jumper M-F ribbon","Cable, USB M-F 10 ft","Extension cord, 15 ft","Arduino Uno WiFi R3, Case, 3D print","ADXL Mount, 2pcs","Dell Wyse, 3040","500GB M.2. Crucial","SCREW, M2 x  4.8 mm LG, BLK OX","SCREW, M3 x  20 mm LG, BLK OX"],["1","1","1","1","1","1","1","1","1","1","2","4"],["N","N","N","Y","N","N","Y","Y","Y","N","N","N"],[null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null],["A","A","A","A","A","A","A","A","A","A","A","A"],["14.95","27.60","4.99","3.95","8.59","7.95",null,null,"35.23","21.99",null,null],["adafruit","Digikey","Amazon","Digikey","Amazon","Amazon",null,null,"ebay","Amazon","ebay","ebay"],["1528-1120-ND","1050-1024-ND","B08LDRMFCB","1528-1162-ND","B08FJ8Z4TJ","B000KKJUHE",null,null,null,"CT500P3SSD8",null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>location_id<\/th>\n      <th>Lv<\/th>\n      <th>Component<\/th>\n      <th>Seq<\/th>\n      <th>Description<\/th>\n      <th>Quantity<\/th>\n      <th>Fix<\/th>\n      <th>On-date<\/th>\n      <th>Off-date<\/th>\n      <th>Rev<\/th>\n      <th>Unit Cost<\/th>\n      <th>Vendor<\/th>\n      <th>Vendor PN<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-</div>
-</div>
-<p>Definitions:</p>
-<ul>
-<li><strong>Lv</strong>: The hardware level, which can expand to multiple monitoring systems if needed.</li>
-<li><strong>Component</strong>: Serial number to be scanned if needed.</li>
-<li><strong>Seq</strong>: The operation sequence from installation onward.</li>
-<li><strong>Description</strong>: Description of the part or component.</li>
-<li><strong>Quantity per</strong>: Number of parts needed for functionality.</li>
-<li><strong>Fix</strong>: Repairability of parts.</li>
-<li><strong>On-date</strong>: To track stable parts. Default to “Prepared” date on top.</li>
-<li><strong>Off-date</strong>: To track depreciated parts. NULL if stable.</li>
-<li><strong>Rev</strong>: Revision to track prints and schematics.</li>
-<li><strong>Unit Cost</strong>: Cost at the time of document.</li>
-<li><strong>Vendor</strong>: Vendor information of location.</li>
-<li><strong>Vendor PN</strong>: Vendor part number.</li>
-</ul>
-</section>
-<section id="get-total-cost-per-installation" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="get-total-cost-per-installation"><span class="header-section-number">1.3</span> Get Total Cost per Installation</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>bom_data <span class="ot">&lt;-</span> bom_data <span class="sc">|&gt;</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit_cost =</span> <span class="fu">parse_number</span>(unit_cost))</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>bom_data <span class="sc">|&gt;</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location_id) <span class="sc">|&gt;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_cost =</span> <span class="fu">sum</span>(unit_cost, <span class="at">na.rm =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; # A tibble: 3 × 2
-#&gt;   location_id total_cost
-#&gt;   &lt;chr&gt;            &lt;dbl&gt;
-#&gt; 1 A00.01            125.
-#&gt; 2 B00.01            125.
-#&gt; 3 C00.01            125.</code></pre>
-</div>
-</div>
-</section>
-<section id="plot-installed-parts" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="plot-installed-parts"><span class="header-section-number">1.4</span> Plot Installed Parts</h2>
-<p>If there are any nonconformities, one could cross check the serial numbers to track parts.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>bom_data <span class="sc">|&gt;</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location_id, component, description) <span class="sc">|&gt;</span> </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">name =</span> <span class="st">"quantity"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(component, quantity, <span class="at">fill =</span> location_id)) <span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="bom_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="768"></p>
-</div>
-</div>
+<p><img src="./man/figures/lifecycle-defunct.svg" class="img-fluid"></p>
+<p>The current AWS tables take too much time to analyze and edit.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -550,13 +416,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Introduction</span>
+      <a href="./datacollection.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Query Stored Data</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./calibration.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Installation and Calibration</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./references.html" class="pagination-link">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

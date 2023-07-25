@@ -6,9 +6,9 @@ source("_common.R")
 
 ```
 
-## Signal
+## Example Signal
 
-Shown below is a signal for one complete cycle. Note that the Acceleration of y axis, the axis that is pointing down, is not exactly at 1g. 
+Shown below is a signal for a complete cycle. Note that the acceleration of the y axis (pointing down), is not at 1g. This is an acceptable condition. 
 
 ```{r}
 d <- pre_proc_tbl("2023-06-10_garagedoor-1") 
@@ -59,22 +59,29 @@ d_med |> ggplot(aes(t, value)) +
 
 ### Filter Data
 
-The choice of n should be the minimum odd value that will produce the final segmentation on the baseline signal. This parameter needs to be verified after any adjustment to the accelerometer or hardware during the qualification process.
+The choice of n should be the minimum odd value that will produce the final segmentation on the baseline signal. The baseline signal is the calibrated, initial measurement. This parameter needs to be verified during the qualification process.
 
 ```{r}
 d <- d |> mutate(across(c(x, y, z), ~mmed(x = ., n = 5)))
 
 d |> 
   plot_ad() +
-  labs(title = "Median Filtered Signal")
+  labs(title = "Filtered Signal")
 ```
-
+Note that this process removes some information, and it is not the signal that is fed to the models.
 
 ## Grenerate Virtual Recipe Steps
 
 ![](./man/figures/lifecycle-maturing.svg)
 
-The following is an automated procedure that cleans and segments the signal into idle, torsion coil, and impulse responses observed during operation. 
+The following is an automated procedure that cleans and segments the signal into idle, torsion coil, and impulse responses. 
+
+### Extract Torsion Coil Response
+
+![](./man/figures/lifecycle-stable.svg)
+
+The first step is to smooth the signal, and a machine learning method is used to isolate the torsion coil unwinding and winding scenarios. 
+
 
 ```{r}
 d <- d |> 
@@ -88,14 +95,8 @@ d |>
   ggplot(aes(time, value)) +
   geom_point(size = 0.5) +
   facet_wrap(~name) +
-  labs(title = "Signal Smoothing")
+  labs(title = "Smoothed Signal")
 ```
-
-### Extract Torsion Coil Response
-
-![](./man/figures/lifecycle-stable.svg)
-
-The following is a machine learning method to isolate the torsion coil unwinding and winding scenarios. 
 
 ```{python}
 import statsmodels.api as sm1
@@ -198,7 +199,7 @@ d_fmerg |>
   ggplot(aes(id, z, col = as.factor(bin))) +
   geom_point(size = 0.3) +
   labs(x = "time (s)", 
-       y = "Calibrated Value", 
+       y = "Acceleration (g)",
        col = "Recipe Step")
 
 ```
@@ -245,7 +246,7 @@ d_fmerg_final <- d_fmerg |>
 ```
 
 ```{r}
-d_fmerg_final |>
+d_fmerg_final |> 
   pivot_longer(c(x, y, z)) |>
   ggplot(aes(time, value, col = as.factor(recipe_step))) +
   geom_point(size = 0.3) +
@@ -257,26 +258,24 @@ d_fmerg_final |>
 
 The unwinding the torsion coil (pink, door going up) generates a distinct signature compared to the opposite direction (green, door coming down).
 
-The shape of the signal comes from a constant rate of tilt around the corner track, which lead to exponentially decaying or growing solutions.
-
-The tilt of the garage door, denoted by \(\theta(t)\) can be expressed by a the following first order differential equation:
+The shape of the signal comes from the rate of tilt around the turn, denoted by \(\theta(t)\), and can be expressed by a the following first order differential equation:
 
 $$
-\frac{d\theta}{dt} = f(\theta, G, t)\
+\frac{d\theta}{dt} = f(\theta, G, t),
 $$
 
-where \(f(\theta, G, t)\) represents the function describing the dynamics of the garage door, and G is the geometry of the system. This function is unknown, but can be expressed for the simplest case,
+where \(f(\theta, G, t)\) represents the function describing the dynamics of the garage door, and G is the geometry of the system. This function is unknown, but can be expressed for the simplest case as
 
 $$
- \frac{d\theta}{dt} =\dot{\theta}\ = k\theta 
+ \frac{d\theta}{dt} =\dot{\theta}\ = k\theta, 
 $$
 
-, which states that the rate of change of the angular position of the accelerometer Y and Z axis is proportional to the current angular position ($\dot{\theta}/θ = k$). The general solution to this equation is
+which states that the rate of change of the angular position of the accelerometer Y and Z axis is proportional to the current angular position ($\dot{\theta}/θ = k$). The general solution to this equation is
 
 $$
-\theta \ =  Ce^{kt}
+\theta \ =  Ce^{kt},
 $$
-, where C is a constant that depends on the initial conditions of the system. This is one of the reasons why the adjustment for the angle sweep using the adjustable mount is important.
+where C is a constant that depends on the initial conditions of the system. This is one of the reasons why the adjustment for the angle sweep using the adjustable mount is important.
 
 
 

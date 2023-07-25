@@ -6,55 +6,30 @@ source("_common.R")
 library(reticulate)
 
 ```
-[Work in Progress]{style="color: red; font-size: 20px;"}
-
-Welcome to the documentation for the “Garage Door Prognostics” project.
 
 
-## System Configuration
+Welcome to the [work in progress]{style="color: red"} documentation for the “Garage Door PHM” project.
 
-![](./man/figures/lifecycle-experimental.svg)
+**Objectives:**
 
-![ ](./images_for_document/ptype.jpg){width="49.7%" fig-align="center"}
+1. Improve understanding of the product, system, and codebase: Efficiently make changes when I get things wrong.
 
+2. Troubleshoot issues: It is often easier to browse through a document, rather than scanning my notebooks and scripts.
 
-```{mermaid}
-graph TB
-A(Accelerometer)-->AA 
+3. Change management and version control: Helps me keep track of the evolution of components.
 
-subgraph Future-Replace
-AA[Arduino]-->E[Thin Client]
-style Future-Replace fill:#f0f0f0,stroke:grey,stroke-width:2px
-end
+4. Knowledge sharing: This is my way of giving back to the people who allowed me into their garages. In many cases, the feedback helped me change my approach and make improvements.  
 
-E-->F[AWS RDS]
-F-->FF[Decisions / Notifications]
-F-->G("Dashboard </br>(Metrics, Sensor Data,  Decisions)")
-FF-.->G
-GD(Garage Door) -.-> A
-style G fill:#B6E6E6
-style GD fill:salmon 
-style E stroke:blue,stroke-width:3px
+This is currently not the top priority for me. There are many other tasks that take precedence frequently.
 
-subgraph Thin-Client
-BB((Every </br> 2 Hours))-->CA[Gather Data]
-BB-->CAA[Preprocess]
-CAA-->CAAB{Door Activity?}
-CAAB--Yes-->CBB[Run Models]
-CAAB--No-->CAAC(End)
-CBB-->CB[Data / Results]
-style BB fill:salmon 
-style Thin-Client fill:#f0f0f0,stroke:blue,stroke-width:3px
-end
-
-```
+That being said, this will continue to evolve in between many changes I make for both hardware and software. I plan on spending a few hours every week here, which I think would ultimately benefit the project. 
 
 
 ## Note on Code Folding
 
 I will leave the code blocks open by default, but there will be instances where code folding would warrant. If this is the case, you could easily unfold them by clicking an arrow above the output. 
 
-Here is an example:
+For example,
 
 ```{r}
 #| code-fold: true

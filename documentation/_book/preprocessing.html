@@ -144,7 +144,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./bom.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bill of Materials</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Material Tracking</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -173,6 +173,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./maintenance_tracking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Maintenance Tracking</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -187,7 +193,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#signal" id="toc-signal" class="nav-link active" data-scroll-target="#signal"><span class="header-section-number">3.1</span> Signal</a></li>
+  <li><a href="#example-signal" id="toc-example-signal" class="nav-link active" data-scroll-target="#example-signal"><span class="header-section-number">3.1</span> Example Signal</a></li>
   <li><a href="#median-filter" id="toc-median-filter" class="nav-link" data-scroll-target="#median-filter"><span class="header-section-number">3.2</span> Median Filter</a>
   <ul class="collapse">
   <li><a href="#verify-filter" id="toc-verify-filter" class="nav-link" data-scroll-target="#verify-filter"><span class="header-section-number">3.2.1</span> Verify Filter</a></li>
@@ -222,9 +228,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="signal" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="signal"><span class="header-section-number">3.1</span> Signal</h2>
-<p>Shown below is a signal for one complete cycle. Note that the Acceleration of y axis, the axis that is pointing down, is not exactly at 1g.</p>
+<section id="example-signal" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="example-signal"><span class="header-section-number">3.1</span> Example Signal</h2>
+<p>Shown below is a signal for a complete cycle. Note that the acceleration of the y axis (pointing down), is not at 1g. This is an acceptable condition.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">pre_proc_tbl</span>(<span class="st">"2023-06-10_garagedoor-1"</span>) </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -274,23 +280,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="filter-data" class="level3" data-number="3.2.2">
 <h3 data-number="3.2.2" class="anchored" data-anchor-id="filter-data"><span class="header-section-number">3.2.2</span> Filter Data</h3>
-<p>The choice of n should be the minimum odd value that will produce the final segmentation on the baseline signal. This parameter needs to be verified after any adjustment to the accelerometer or hardware during the qualification process.</p>
+<p>The choice of n should be the minimum odd value that will produce the final segmentation on the baseline signal. The baseline signal is the calibrated, initial measurement. This parameter needs to be verified during the qualification process.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(x, y, z), <span class="sc">~</span><span class="fu">mmed</span>(<span class="at">x =</span> ., <span class="at">n =</span> <span class="dv">5</span>)))</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> </span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_ad</span>() <span class="sc">+</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Median Filtered Signal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Filtered Signal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="preprocessing_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
+<p>Note that this process removes some information, and it is not the signal that is fed to the models.</p>
 </section>
 </section>
 <section id="grenerate-virtual-recipe-steps" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="grenerate-virtual-recipe-steps"><span class="header-section-number">3.3</span> Grenerate Virtual Recipe Steps</h2>
 <p><img src="./man/figures/lifecycle-maturing.svg" class="img-fluid"></p>
-<p>The following is an automated procedure that cleans and segments the signal into idle, torsion coil, and impulse responses observed during operation.</p>
+<p>The following is an automated procedure that cleans and segments the signal into idle, torsion coil, and impulse responses.</p>
+<section id="extract-torsion-coil-response" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="extract-torsion-coil-response"><span class="header-section-number">3.3.1</span> Extract Torsion Coil Response</h3>
+<p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
+<p>The first step is to smooth the signal, and a machine learning method is used to isolate the torsion coil unwinding and winding scenarios.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">z_smo =</span> <span class="fu">loess</span>(z <span class="sc">~</span> time, <span class="at">span =</span> <span class="fl">0.1</span>)<span class="sc">$</span>fitted, </span>
@@ -303,15 +314,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, value)) <span class="sc">+</span></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>name) <span class="sc">+</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Signal Smoothing"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Smoothed Signal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="preprocessing_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
-<section id="extract-torsion-coil-response" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="extract-torsion-coil-response"><span class="header-section-number">3.3.1</span> Extract Torsion Coil Response</h3>
-<p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
-<p>The following is a machine learning method to isolate the torsion coil unwinding and winding scenarios.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm1</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -412,7 +419,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(id, z, <span class="at">col =</span> <span class="fu">as.factor</span>(bin))) <span class="sc">+</span></span>
 <span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"time (s)"</span>, </span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Calibrated Value"</span>, </span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Acceleration (g)"</span>,</span>
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"Recipe Step"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="preprocessing_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="768"></p>
@@ -459,7 +466,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">recipe_step =</span> <span class="fu">paste</span>(bin_hmm, bin))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>d_fmerg_final <span class="sc">|&gt;</span></span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>d_fmerg_final <span class="sc">|&gt;</span> </span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(x, y, z)) <span class="sc">|&gt;</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, value, <span class="at">col =</span> <span class="fu">as.factor</span>(recipe_step))) <span class="sc">+</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
@@ -472,19 +479,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The unwinding the torsion coil (pink, door going up) generates a distinct signature compared to the opposite direction (green, door coming down).</p>
-<p>The shape of the signal comes from a constant rate of tilt around the corner track, which lead to exponentially decaying or growing solutions.</p>
-<p>The tilt of the garage door, denoted by ((t)) can be expressed by a the following first order differential equation:</p>
+<p>The shape of the signal comes from the rate of tilt around the turn, denoted by ((t)), and can be expressed by a the following first order differential equation:</p>
 <p><span class="math display">\[
-\frac{d\theta}{dt} = f(\theta, G, t)\
+\frac{d\theta}{dt} = f(\theta, G, t),
 \]</span></p>
-<p>where (f(, G, t)) represents the function describing the dynamics of the garage door, and G is the geometry of the system. This function is unknown, but can be expressed for the simplest case,</p>
+<p>where (f(, G, t)) represents the function describing the dynamics of the garage door, and G is the geometry of the system. This function is unknown, but can be expressed for the simplest case as</p>
 <p><span class="math display">\[
-\frac{d\theta}{dt} =\dot{\theta}\ = k\theta
+\frac{d\theta}{dt} =\dot{\theta}\ = k\theta,
 \]</span></p>
-<p>, which states that the rate of change of the angular position of the accelerometer Y and Z axis is proportional to the current angular position (<span class="math inline">\(\dot{\theta}/θ = k\)</span>). The general solution to this equation is</p>
+<p>which states that the rate of change of the angular position of the accelerometer Y and Z axis is proportional to the current angular position (<span class="math inline">\(\dot{\theta}/θ = k\)</span>). The general solution to this equation is</p>
 <p><span class="math display">\[
-\theta \ =  Ce^{kt}
-\]</span> , where C is a constant that depends on the initial conditions of the system. This is one of the reasons why the adjustment for the angle sweep using the adjustable mount is important.</p>
+\theta \ =  Ce^{kt},
+\]</span> where C is a constant that depends on the initial conditions of the system. This is one of the reasons why the adjustment for the angle sweep using the adjustable mount is important.</p>
 
 
 </section>

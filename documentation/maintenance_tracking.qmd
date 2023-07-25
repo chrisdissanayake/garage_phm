@@ -1,0 +1,5 @@
+# Maintenance Tracking
+
+![](./man/figures/lifecycle-defunct.svg)
+
+The current AWS tables take too much time to analyze and edit.   

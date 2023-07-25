@@ -7,6 +7,16 @@ source("_common.R")
 
 ```
 
+## Hilbert Spectrum
+
+```{r}
+library(dissthispkgr)
+
+
+
+```
+
+
 ## Hilbert Huang Transform
 ![](./man/figures/lifecycle-stable.svg)
 

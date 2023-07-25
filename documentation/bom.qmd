@@ -1,6 +1,4 @@
-# Bill of Materials
-
-![](./man/figures/lifecycle-stable.svg)
+# Material Tracking
 
 ```{r}
 #| results: "asis"
@@ -9,11 +7,14 @@ source("_common.R")
 library(janitor)
 library(readxl)
 ```
+## QR Scanner
+![](./man/figures/lifecycle-experimental.svg)
 
+## Bill of Materials (BOM) Structure Report
 
-## BOM structure report
+![](./man/figures/lifecycle-stable.svg)
 
-Every device has its own BOM structure report. 
+Each device has its own BOM structure report. When a QR reader is used to scan a device, this item will be listed on the landing page.
 
 ```{r}
 file_list <- list.files("../BOM/", pattern = "BOM STRUCTURE REPORT – ALL LEVELS", full.names = TRUE)
@@ -36,7 +37,7 @@ bom_data |> filter(location_id == "A00.01") |> DT::datatable()
 
 ```
 
-Column definitions:
+Definitions:
 
 - **Lv**: The hardware level, which can expand to multiple monitoring systems if needed.
 - **Component**: Serial number to be scanned if needed.
@@ -52,7 +53,7 @@ Column definitions:
 - **Vendor PN**: Vendor part number.
 
 
-## Get total cost per installation
+## Get Total Cost per Installation
 
 ```{r}
 bom_data <- bom_data |> 
@@ -67,16 +68,15 @@ bom_data |>
 
 ## Plot Installed Parts
 
-If there are any one offs, one could filter through the original table using the serial number to track parts. 
-
+If there are any nonconformities, one could cross check the serial numbers to track parts. 
 
 ```{r}
 bom_data |> 
   group_by(location_id, component, description) |> 
-  count() |> 
-  ggplot(aes(component, n, fill = location_id)) +
+  count(name = "quantity") |> 
+  ggplot(aes(component, quantity, fill = location_id)) +
   geom_col() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) 
 ```
 
 

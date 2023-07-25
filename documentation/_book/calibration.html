@@ -95,6 +95,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -142,7 +145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./bom.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bill of Materials</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Material Tracking</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -171,6 +174,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./maintenance_tracking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Maintenance Tracking</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -185,14 +194,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#adxl335" id="toc-adxl335" class="nav-link active" data-scroll-target="#adxl335"><span class="header-section-number">2.1</span> ADXL335</a></li>
-  <li><a href="#preliminary-calibration" id="toc-preliminary-calibration" class="nav-link" data-scroll-target="#preliminary-calibration"><span class="header-section-number">2.2</span> Preliminary Calibration</a></li>
-  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation"><span class="header-section-number">2.3</span> Installation</a>
+  <li><a href="#system-configuration" id="toc-system-configuration" class="nav-link active" data-scroll-target="#system-configuration"><span class="header-section-number">2.1</span> System Configuration</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation"><span class="header-section-number">2.2</span> Installation</a>
   <ul class="collapse">
-  <li><a href="#thin-client" id="toc-thin-client" class="nav-link" data-scroll-target="#thin-client"><span class="header-section-number">2.3.1</span> Thin Client</a></li>
-  <li><a href="#arduino" id="toc-arduino" class="nav-link" data-scroll-target="#arduino"><span class="header-section-number">2.3.2</span> Arduino</a></li>
-  <li><a href="#install-adjustable-mount" id="toc-install-adjustable-mount" class="nav-link" data-scroll-target="#install-adjustable-mount"><span class="header-section-number">2.3.3</span> Install Adjustable Mount</a></li>
+  <li><a href="#thin-client" id="toc-thin-client" class="nav-link" data-scroll-target="#thin-client"><span class="header-section-number">2.2.1</span> Thin Client</a></li>
+  <li><a href="#adxl335-to-arduino" id="toc-adxl335-to-arduino" class="nav-link" data-scroll-target="#adxl335-to-arduino"><span class="header-section-number">2.2.2</span> ADXL335 to Arduino</a></li>
+  <li><a href="#preliminary-calibration" id="toc-preliminary-calibration" class="nav-link" data-scroll-target="#preliminary-calibration"><span class="header-section-number">2.2.3</span> Preliminary Calibration</a></li>
+  <li><a href="#install-adjustable-mount" id="toc-install-adjustable-mount" class="nav-link" data-scroll-target="#install-adjustable-mount"><span class="header-section-number">2.2.4</span> Install Adjustable Mount</a></li>
   </ul></li>
+  <li><a href="#definition-of-a-cycle" id="toc-definition-of-a-cycle" class="nav-link" data-scroll-target="#definition-of-a-cycle"><span class="header-section-number">2.3</span> Definition of a Cycle</a></li>
   <li><a href="#tilt-orientation-adjustment" id="toc-tilt-orientation-adjustment" class="nav-link" data-scroll-target="#tilt-orientation-adjustment"><span class="header-section-number">2.4</span> Tilt Orientation Adjustment</a>
   <ul class="collapse">
   <li><a href="#mutual-infrmation" id="toc-mutual-infrmation" class="nav-link" data-scroll-target="#mutual-infrmation"><span class="header-section-number">2.4.1</span> Mutual Infrmation</a></li>
@@ -221,15 +231,69 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="adxl335" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="adxl335"><span class="header-section-number">2.1</span> ADXL335</h2>
+<section id="system-configuration" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="system-configuration"><span class="header-section-number">2.1</span> System Configuration</h2>
+<p><img src="./man/figures/lifecycle-experimental.svg" class="img-fluid"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images_for_document/ptype.jpg" class="img-fluid figure-img" style="width:49.7%"></p>
+</figure>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<div>
+<pre class="mermaid mermaid-js">graph TB
+A(Accelerometer)--&gt;AA 
+
+subgraph Future-Replace
+AA[Arduino]--&gt;E[Thin Client]
+style Future-Replace fill:#f0f0f0,stroke:grey,stroke-width:2px
+end
+
+E--&gt;F[AWS RDS]
+F--&gt;FF[Decisions / Notifications]
+F--&gt;G("Dashboard &lt;/br&gt;(Metrics, Sensor Data,  Decisions)")
+FF-.-&gt;G
+GD(Garage Door) -.-&gt; A
+style G fill:#B6E6E6
+style GD fill:salmon 
+style E stroke:blue,stroke-width:3px
+
+subgraph Thin-Client
+BB((Every &lt;/br&gt; 2 Hours))--&gt;CA[Gather Data]
+BB--&gt;CAA[Preprocess]
+CAA--&gt;CAAB{Door Activity?}
+CAAB--Yes--&gt;CBB[Run Models]
+CAAB--No--&gt;CAAC(End)
+CBB--&gt;CB[Data / Results]
+style BB fill:salmon 
+style Thin-Client fill:#f0f0f0,stroke:blue,stroke-width:3px
+end
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="installation" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="installation"><span class="header-section-number">2.2</span> Installation</h2>
+<section id="thin-client" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="thin-client"><span class="header-section-number">2.2.1</span> Thin Client</h3>
+<p><img src="./man/figures/lifecycle-experimental.svg" class="img-fluid"></p>
+</section>
+<section id="adxl335-to-arduino" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="adxl335-to-arduino"><span class="header-section-number">2.2.2</span> ADXL335 to Arduino</h3>
+<p><img src="./man/figures/lifecycle-experimental.svg" class="img-fluid"></p>
 <p>The ADXL335 is a triaxial accelerometer with three analog outputs that correspond to the orthogonal X, Y, and Z axes. The accelerometer responds to <a href="https://www.digikey.com/en/articles/using-an-accelerometer-for-inclination-sensing" target="_blank">tilt</a>, and since it is mounted in parallel to the door (reference), this measurement translates to a dynamic angle of incline.</p>
 <p>The technical datasheet for ADXL335 is <a href="https://www.analog.com/media/en/technical-documentation/data-sheets/ADXL335.pdf">here</a>.</p>
+<p>The accelerometer is connected to the Arduino following the instructions available <a href="https://learn.adafruit.com/adafruit-analog-accelerometer-breakouts/arduino-wiring">here</a>.</p>
 </section>
-<section id="preliminary-calibration" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="preliminary-calibration"><span class="header-section-number">2.2</span> Preliminary Calibration</h2>
+<section id="preliminary-calibration" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="preliminary-calibration"><span class="header-section-number">2.2.3</span> Preliminary Calibration</h3>
 <p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
-<p>The calibration procedure is highlighted <a href="https://learn.adafruit.com/adxl345-digital-accelerometer/programming" target="_blank">here</a>. This also serves the purpose of verifying the functionality of the accelerometer.</p>
+<p>The calibration procedure is explained <a href="https://learn.adafruit.com/adxl345-digital-accelerometer/programming" target="_blank">here</a>. This also serves as a secondary purpose of verifying the functionality of the accelerometer.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;math.h&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">int</span> x_out <span class="op">=</span> A0<span class="op">;</span> </span>
@@ -300,16 +364,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="installation" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="installation"><span class="header-section-number">2.3</span> Installation</h2>
-<section id="thin-client" class="level3" data-number="2.3.1">
-<h3 data-number="2.3.1" class="anchored" data-anchor-id="thin-client"><span class="header-section-number">2.3.1</span> Thin Client</h3>
-</section>
-<section id="arduino" class="level3" data-number="2.3.2">
-<h3 data-number="2.3.2" class="anchored" data-anchor-id="arduino"><span class="header-section-number">2.3.2</span> Arduino</h3>
-</section>
-<section id="install-adjustable-mount" class="level3" data-number="2.3.3">
-<h3 data-number="2.3.3" class="anchored" data-anchor-id="install-adjustable-mount"><span class="header-section-number">2.3.3</span> Install Adjustable Mount</h3>
+<section id="install-adjustable-mount" class="level3" data-number="2.2.4">
+<h3 data-number="2.2.4" class="anchored" data-anchor-id="install-adjustable-mount"><span class="header-section-number">2.2.4</span> Install Adjustable Mount</h3>
 <p>The accelerometer mount should be installed closer to the arm bracket, the closer the better.</p>
 <div>
 <figure class="figure">
@@ -318,9 +374,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
+<section id="definition-of-a-cycle" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="definition-of-a-cycle"><span class="header-section-number">2.3</span> Definition of a Cycle</h2>
+<p>A complete sequence of opening and closing the garage door, including the upward and downward movements, starting from the closed position to fully open and then back to the closed position.</p>
+<p>Here is my garage door opening and closing, showing one complete cycle:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/APYvsNZTHsQ" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p>For testing purposes, there will be an initial delay, idle on top, and ending delay, all five seconds.</p>
+</section>
 <section id="tilt-orientation-adjustment" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="tilt-orientation-adjustment"><span class="header-section-number">2.4</span> Tilt Orientation Adjustment</h2>
-<p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"> The accelerometer mount is adjustable, and the reference tilt angle (<code>tilt_fc</code>, above) can be adjusted by loosening the M3 screws.</p>
+<p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
+<p>The accelerometer mount is adjustable, and the reference tilt angle (<code>tilt_fc</code>, above) can be adjusted by loosening the M3 screws.</p>
 <p>The door moves relative to the left and right tracks, and this can cause problems to the “Track” failure model if the accelerometer is not positioned correctly. Here are three outputs for three angles, -17 deg (CCW), 0 deg, and 17 deg (CW).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>p_1 <span class="ot">&lt;-</span> <span class="fu">pre_proc_tbl</span>(<span class="st">"angle-ccw17"</span>) <span class="sc">|&gt;</span> </span>
@@ -346,14 +410,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>gt <span class="ot">&lt;-</span> patchwork<span class="sc">::</span><span class="fu">patchworkGrob</span>(p)</span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>gridExtra<span class="sc">::</span><span class="fu">grid.arrange</span>(gt, <span class="at">left =</span> <span class="st">"Acceleration (g)"</span>, <span class="at">bottom =</span> <span class="st">"time (s)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="calibration_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="768"></p>
+<p><img src="calibration_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
-<p>It is impossible to see any difference between these signals other than for x. Fixing x to the 0g position is not ideal because that is not how the tracks and door are positioned.</p>
+<p>It is hard to see any difference between these signals other than for x. Fixing x to an initial 0g position is not optimal because the door moves relative to the track positions. There is no guarantee that the door movement is “flat” against the ground.</p>
 <section id="mutual-infrmation" class="level3" data-number="2.4.1">
 <h3 data-number="2.4.1" class="anchored" data-anchor-id="mutual-infrmation"><span class="header-section-number">2.4.1</span> Mutual Infrmation</h3>
-<p>The following procedure is a solution to this problem by to exploiting the nonlinear dependence between sensor variables, namely x-y and x-z. The solution also works without any preprocessing, which is also an advantage.</p>
-<p>Below is an example calculation for the mutual information between x and y for the signal at 0 degrees. A lower value indicates better “alignment”.</p>
+<p>The following procedure adresses this problem by to exploiting the nonlinear dependence between sensor variables, namely x-y and x-z. The solution also works well with raw data, which is an advantage.</p>
+<p>Below is an example calculation for the mutual information between x and y for the signal at 0 degrees. A lower value indicates better “alignment” of the accelerometer.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">pre_proc_tbl</span>(<span class="st">"2023-06-10_garagedoor-1"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -405,7 +469,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="tilt-angle-sweep" class="level3" data-number="2.4.2">
 <h3 data-number="2.4.2" class="anchored" data-anchor-id="tilt-angle-sweep"><span class="header-section-number">2.4.2</span> Tilt Angle Sweep</h3>
 <p><img src="./man/figures/lifecycle-maturing.svg" class="img-fluid"></p>
-<p>To determine the most optimal angle, a sweep needs to be done at varying increments. Typically, this is done within a range of approximately ±10 degrees from zero.</p>
+<p>To determine the optimal angle, a sweep needs to be done at varying increments. Typically, this is done within a range of approximately ±10 degrees from zero.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>d_long <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../data/mu-i_angle_swp.csv"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"xy"</span>, <span class="st">"yz"</span>, <span class="st">"xz"</span>), <span class="at">names_to =</span> <span class="st">"name"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>)</span>
@@ -434,10 +498,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"Variables"</span>, </span>
 <span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Angle Sweep Results"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="calibration_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="768"></p>
+<p><img src="calibration_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
-<p>The curve typically follows a hinge function. In our example, it may not be appropriate to select the zero degree position, and it is recommended to re-measure the top three angles. For this instance, the sensor was positioned at a five-degree clockwise (CW) offset.</p>
+<p>The curve follows a hinge function. It is recommended to re-measure at the lowest three positions. In this instance, the sensor was positioned at a five-degree CW offset.</p>
 
 
 </section>
@@ -680,7 +744,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./bom.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bill of Materials</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Material Tracking</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

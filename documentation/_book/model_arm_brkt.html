@@ -142,7 +142,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./bom.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bill of Materials</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Material Tracking</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -171,6 +171,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./maintenance_tracking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Maintenance Tracking</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -185,10 +191,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#hilbert-huang-transform" id="toc-hilbert-huang-transform" class="nav-link active" data-scroll-target="#hilbert-huang-transform"><span class="header-section-number">4.1</span> Hilbert Huang Transform</a></li>
-  <li><a href="#fit-hmm" id="toc-fit-hmm" class="nav-link" data-scroll-target="#fit-hmm"><span class="header-section-number">4.2</span> Fit HMM</a></li>
-  <li><a href="#evaluate-fit" id="toc-evaluate-fit" class="nav-link" data-scroll-target="#evaluate-fit"><span class="header-section-number">4.3</span> Evaluate Fit</a></li>
-  <li><a href="#chapman-kolmogorov" id="toc-chapman-kolmogorov" class="nav-link" data-scroll-target="#chapman-kolmogorov"><span class="header-section-number">4.4</span> Chapman-Kolmogorov</a></li>
+  <li><a href="#hilbert-spectrum" id="toc-hilbert-spectrum" class="nav-link active" data-scroll-target="#hilbert-spectrum"><span class="header-section-number">4.1</span> Hilbert Spectrum</a></li>
+  <li><a href="#hilbert-huang-transform" id="toc-hilbert-huang-transform" class="nav-link" data-scroll-target="#hilbert-huang-transform"><span class="header-section-number">4.2</span> Hilbert Huang Transform</a></li>
+  <li><a href="#fit-hmm" id="toc-fit-hmm" class="nav-link" data-scroll-target="#fit-hmm"><span class="header-section-number">4.3</span> Fit HMM</a></li>
+  <li><a href="#evaluate-fit" id="toc-evaluate-fit" class="nav-link" data-scroll-target="#evaluate-fit"><span class="header-section-number">4.4</span> Evaluate Fit</a></li>
+  <li><a href="#chapman-kolmogorov" id="toc-chapman-kolmogorov" class="nav-link" data-scroll-target="#chapman-kolmogorov"><span class="header-section-number">4.5</span> Chapman-Kolmogorov</a></li>
   </ul>
 </nav>
     </div>
@@ -212,256 +219,262 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="hilbert-huang-transform" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="hilbert-huang-transform"><span class="header-section-number">4.1</span> Hilbert Huang Transform</h2>
-<p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
+<section id="hilbert-spectrum" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="hilbert-spectrum"><span class="header-section-number">4.1</span> Hilbert Spectrum</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>imf_ener <span class="ot">&lt;-</span> <span class="cf">function</span>(tbl, <span class="at">meas_fn =</span> <span class="st">"x"</span>) {</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  sig <span class="ot">&lt;-</span> tbl <span class="sc">%&gt;%</span> <span class="fu">pull</span>({{ meas_fn }})</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  tt <span class="ot">&lt;-</span> tbl <span class="sc">%&gt;%</span> <span class="fu">pull</span>(new_sensor_dt)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  inputimfs <span class="ot">&lt;-</span>  <span class="fu">Sig2IMF</span>(sig, tt, <span class="at">max.imf =</span> <span class="dv">3</span>)<span class="sc">$</span>imf <span class="co"># note max IMF </span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  n_cols <span class="ot">&lt;-</span> <span class="fu">ncol</span>(inputimfs)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  n_rows <span class="ot">&lt;-</span> <span class="fu">nrow</span>(inputimfs)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(n_cols)) <span class="fu">return</span>(<span class="fu">tibble</span>())</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mse_hilbert = sum(inputimfs[,1]^2)/n_rows</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ek = NULL</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># for (i in 1:n_cols) ek &lt;- c(ek, mse_hilbert*2.01^(-i)/0.719) # https://link.springer.com/chapter/10.1007/978-3-030-89010-0_8</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">#</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># sample_ek = NULL</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># for (i in 1:n_cols) sample_ek &lt;- c(sample_ek, sum(inputimfs[,i]^2)/n_rows)</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  sample_ek <span class="ot">&lt;-</span> <span class="fu">apply</span>(inputimfs, <span class="dv">2</span>, <span class="cf">function</span>(x){<span class="fu">sum</span>(x<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>n_rows})</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">n =</span> <span class="dv">1</span><span class="sc">:</span>n_cols </span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>         <span class="co"># "ek" = ek</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">log_eek =</span> <span class="fu">log</span>(sample_ek)<span class="sc">/</span><span class="fu">log</span>(<span class="dv">2</span>)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>()</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dissthispkgr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="fit-hmm" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="fit-hmm"><span class="header-section-number">4.2</span> Fit HMM</h2>
+<section id="hilbert-huang-transform" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="hilbert-huang-transform"><span class="header-section-number">4.2</span> Hilbert Huang Transform</h2>
 <p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>get_mm_results <span class="ot">&lt;-</span> <span class="cf">function</span>(tf_loc_id, meas_fn) {</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  .create_objects_for_model <span class="ot">&lt;-</span> <span class="cf">function</span>(tf_loc_id, meas_fn) {</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    tf_loc_id <span class="ot">&lt;-</span> tf_loc_id <span class="sc">%&gt;%</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">unnest</span>(gi) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ungroup</span>()</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    tf_loc_id <span class="ot">&lt;-</span> tf_loc_id <span class="sc">%&gt;%</span> </span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">unnest</span>(<span class="fu">str_glue</span>(<span class="st">"ie_{meas_fn}"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(id, rs_start, n, log_eek, {{ meas_fn }}) <span class="sc">%&gt;%</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="fu">n</span>() <span class="sc">&gt;=</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pivot_wider</span>(<span class="at">values_from =</span> log_eek, <span class="at">names_from =</span> n) <span class="sc">%&gt;%</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>(<span class="st">`</span><span class="at">1</span><span class="st">`</span>, <span class="st">`</span><span class="at">2</span><span class="st">`</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      fml <span class="ot">=</span> <span class="fu">str_glue</span>(<span class="st">"{meas_fn} ~ `2`"</span>) <span class="sc">%&gt;%</span> <span class="fu">formula</span>()</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(<span class="at">tf_loc_id =</span> tf_loc_id, <span class="at">fml =</span> fml)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  } </span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>imf_ener <span class="ot">&lt;-</span> <span class="cf">function</span>(tbl, <span class="at">meas_fn =</span> <span class="st">"x"</span>) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  sig <span class="ot">&lt;-</span> tbl <span class="sc">%&gt;%</span> <span class="fu">pull</span>({{ meas_fn }})</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  tt <span class="ot">&lt;-</span> tbl <span class="sc">%&gt;%</span> <span class="fu">pull</span>(new_sensor_dt)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  inputimfs <span class="ot">&lt;-</span>  <span class="fu">Sig2IMF</span>(sig, tt, <span class="at">max.imf =</span> <span class="dv">3</span>)<span class="sc">$</span>imf <span class="co"># note max IMF </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  n_cols <span class="ot">&lt;-</span> <span class="fu">ncol</span>(inputimfs)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  n_rows <span class="ot">&lt;-</span> <span class="fu">nrow</span>(inputimfs)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(n_cols)) <span class="fu">return</span>(<span class="fu">tibble</span>())</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mse_hilbert = sum(inputimfs[,1]^2)/n_rows</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ek = NULL</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># for (i in 1:n_cols) ek &lt;- c(ek, mse_hilbert*2.01^(-i)/0.719) # https://link.springer.com/chapter/10.1007/978-3-030-89010-0_8</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">#</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># sample_ek = NULL</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># for (i in 1:n_cols) sample_ek &lt;- c(sample_ek, sum(inputimfs[,i]^2)/n_rows)</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  sample_ek <span class="ot">&lt;-</span> <span class="fu">apply</span>(inputimfs, <span class="dv">2</span>, <span class="cf">function</span>(x){<span class="fu">sum</span>(x<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>n_rows})</span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  .create_mm_model <span class="ot">&lt;-</span> <span class="cf">function</span>(model_obj) {</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> <span class="fu">labels</span>(<span class="fu">terms</span>(model_obj<span class="sc">$</span>fml)) <span class="sc">%&gt;%</span> <span class="fu">length</span>() </span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    ms_ols_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> model_obj<span class="sc">$</span>fml,</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data  =</span> model_obj<span class="sc">$</span>tf_loc_id) </span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    ms_model <span class="ot">&lt;-</span> <span class="fu">msmFit</span>(ms_ols_model,</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>                       <span class="at">k =</span> <span class="dv">2</span>,</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>                       <span class="at">p =</span> <span class="dv">0</span>,</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sw =</span> <span class="fu">rep</span>(<span class="cn">TRUE</span>, n <span class="sc">+</span> <span class="dv">2</span>), </span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>                       <span class="at">control =</span> <span class="fu">list</span>(<span class="at">trace =</span> <span class="cn">FALSE</span>, <span class="at">parallelization =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  .process_mm_model <span class="ot">&lt;-</span> <span class="cf">function</span>(model_obj, ms_model, meas_fn) {</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    smoTransMatrob <span class="ot">&lt;-</span> model_obj<span class="sc">$</span>tf_loc_id <span class="sc">%&gt;%</span>  </span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(id, rs_start, {{ meas_fn }}) <span class="sc">%&gt;%</span> <span class="fu">add_row</span>(<span class="at">id =</span> <span class="cn">NA</span>,  <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cbind</span>(. ,ms_model<span class="sc">@</span>Fit<span class="sc">@</span>smoProb)</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    fault_regime <span class="ot">&lt;-</span> <span class="fu">get_fault_regime</span>(smoTransMatrob, meas_fn)</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">smoTransMatrob =</span> smoTransMatrob,</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>         <span class="at">smoTransMat =</span> ms_model<span class="sc">@</span>Fit<span class="sc">@</span>smoTransMat, </span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>         <span class="at">k =</span> ms_model<span class="sc">@</span>k, </span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>         <span class="at">fault_regime =</span> fault_regime)</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  model_obj <span class="ot">&lt;-</span> <span class="fu">.create_objects_for_model</span>(tf_loc_id, meas_fn)</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  ms_model <span class="ot">&lt;-</span> <span class="fu">.create_mm_model</span>(model_obj)</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.process_mm_model</span>(model_obj, ms_model, meas_fn)</span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>get_model_status <span class="ot">&lt;-</span> <span class="cf">function</span>(loc_id, </span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>                                  model_code,</span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">print_error =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">model =</span> <span class="st">"mm_arm_brkt"</span>,</span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">object =</span> <span class="st">"smoTransMatrob"</span>) {</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>  .print_err <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">message =</span> <span class="st">"Error"</span>, <span class="at">print_error =</span> <span class="cn">TRUE</span>){</span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (print_error) <span class="fu">print</span>(<span class="fu">str_glue</span>(<span class="st">"{message} in {loc_id}"</span>)) </span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>) </span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  models_tool <span class="sc">%&gt;%</span></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>({{ model }}) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pluck</span>(<span class="dv">1</span>, object) <span class="sc">%||%</span> <span class="fu">.print_err</span>(<span class="at">print_error =</span> print_error)</span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>model_status_defs <span class="ot">&lt;-</span> <span class="cf">function</span>(type) {</span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>  <span class="cf">switch</span>(type,</span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>         <span class="st">"named list"</span> <span class="ot">=</span> <span class="cn">NA</span>, <span class="co"># success</span></span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>         <span class="st">"list"</span> <span class="ot">=</span> <span class="cn">NA</span>, <span class="co"># missing in configuration</span></span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>         <span class="st">"lgl"</span> <span class="ot">=</span> <span class="st">"Error"</span> <span class="co"># processing error</span></span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>get_fault_regime <span class="ot">&lt;-</span> <span class="cf">function</span>(smoTransMatrob, <span class="at">meas_fn =</span> <span class="st">"x"</span> ) {</span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>  regime_corr <span class="ot">&lt;-</span> smoTransMatrob <span class="sc">%&gt;%</span> </span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>({{ meas_fn }}, <span class="st">`</span><span class="at">1</span><span class="st">`</span>, <span class="st">`</span><span class="at">2</span><span class="st">`</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cor</span>(<span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
-<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">which.max</span>(regime_corr[<span class="dv">1</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]) </span>
-<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>get_model_fails <span class="ot">&lt;-</span> <span class="cf">function</span>(path, loc_id, prob_thres, daysback, model, meas_fn, <span class="at">faults_only =</span> <span class="cn">TRUE</span>) {</span>
-<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>  subset_dummy <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (loc_id <span class="cf">in</span> loc_ids) {</span>
-<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>    models_tool <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="fu">str_glue</span>(<span class="st">"{path}/models/model_object_{loc_id}.rds"</span>)) </span>
-<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>    smoTransMatrob <span class="ot">&lt;-</span> <span class="fu">get_model_status</span>(loc_id,</span>
-<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>                                            models_tool,</span>
-<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">print_error =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">model =</span> <span class="fu">str_glue</span>(<span class="st">"mm_{model}_{meas_fn}"</span>),</span>
-<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">object =</span> <span class="st">"smoTransMatrob"</span>) <span class="sc">%||%</span> <span class="cf">next</span></span>
-<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>    fault_regime <span class="ot">&lt;-</span> <span class="fu">get_model_status</span>(loc_id,</span>
-<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>                                          models_tool,</span>
-<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">print_error =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">model =</span> <span class="fu">str_glue</span>(<span class="st">"mm_{model}_{meas_fn}"</span>),</span>
-<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">object =</span> <span class="st">"fault_regime"</span>) <span class="sc">%||%</span> <span class="cf">next</span></span>
-<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>    smoTransMatrob <span class="ot">&lt;-</span> smoTransMatrob <span class="sc">%&gt;%</span> </span>
-<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">tool_name =</span> loc_id,</span>
-<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>             <span class="at">fault_prob =</span><span class="sc">!!</span><span class="fu">as.symbol</span>(fault_regime), </span>
-<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>             <span class="at">fault_prob =</span> <span class="fu">round</span>(fault_prob, <span class="dv">5</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(rs_start <span class="sc">&gt;</span> <span class="fu">Sys.Date</span>() <span class="sc">-</span> daysback)</span>
-<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (faults_only) {</span>
-<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>      smoTransMatrob <span class="ot">&lt;-</span> smoTransMatrob <span class="sc">%&gt;%</span> <span class="fu">filter</span>(fault_prob <span class="sc">&gt;=</span> {{ prob_thres }})  </span>
-<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>    subset_dummy[[loc_id]] <span class="ot">&lt;-</span> smoTransMatrob <span class="sc">%&gt;%</span> </span>
-<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(tool_name, id, {{ meas_fn }}, rs_start, fault_prob)</span>
-<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(rbind, subset_dummy) <span class="sc">%&gt;%</span> <span class="fu">remove_rownames</span>() </span>
-<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">n =</span> <span class="dv">1</span><span class="sc">:</span>n_cols </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>         <span class="co"># "ek" = ek</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">log_eek =</span> <span class="fu">log</span>(sample_ek)<span class="sc">/</span><span class="fu">log</span>(<span class="dv">2</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>()</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="evaluate-fit" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="evaluate-fit"><span class="header-section-number">4.3</span> Evaluate Fit</h2>
+<section id="fit-hmm" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="fit-hmm"><span class="header-section-number">4.3</span> Fit HMM</h2>
+<p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>get_mm_results <span class="ot">&lt;-</span> <span class="cf">function</span>(tf_loc_id, meas_fn) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  .create_objects_for_model <span class="ot">&lt;-</span> <span class="cf">function</span>(tf_loc_id, meas_fn) {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    tf_loc_id <span class="ot">&lt;-</span> tf_loc_id <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">unnest</span>(gi) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ungroup</span>()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    tf_loc_id <span class="ot">&lt;-</span> tf_loc_id <span class="sc">%&gt;%</span> </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">unnest</span>(<span class="fu">str_glue</span>(<span class="st">"ie_{meas_fn}"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(id, rs_start, n, log_eek, {{ meas_fn }}) <span class="sc">%&gt;%</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="fu">n</span>() <span class="sc">&gt;=</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pivot_wider</span>(<span class="at">values_from =</span> log_eek, <span class="at">names_from =</span> n) <span class="sc">%&gt;%</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>(<span class="st">`</span><span class="at">1</span><span class="st">`</span>, <span class="st">`</span><span class="at">2</span><span class="st">`</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      fml <span class="ot">=</span> <span class="fu">str_glue</span>(<span class="st">"{meas_fn} ~ `2`"</span>) <span class="sc">%&gt;%</span> <span class="fu">formula</span>()</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(<span class="at">tf_loc_id =</span> tf_loc_id, <span class="at">fml =</span> fml)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  } </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  .create_mm_model <span class="ot">&lt;-</span> <span class="cf">function</span>(model_obj) {</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> <span class="fu">labels</span>(<span class="fu">terms</span>(model_obj<span class="sc">$</span>fml)) <span class="sc">%&gt;%</span> <span class="fu">length</span>() </span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    ms_ols_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> model_obj<span class="sc">$</span>fml,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data  =</span> model_obj<span class="sc">$</span>tf_loc_id) </span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    ms_model <span class="ot">&lt;-</span> <span class="fu">msmFit</span>(ms_ols_model,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>                       <span class="at">k =</span> <span class="dv">2</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>                       <span class="at">p =</span> <span class="dv">0</span>,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sw =</span> <span class="fu">rep</span>(<span class="cn">TRUE</span>, n <span class="sc">+</span> <span class="dv">2</span>), </span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>                       <span class="at">control =</span> <span class="fu">list</span>(<span class="at">trace =</span> <span class="cn">FALSE</span>, <span class="at">parallelization =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  .process_mm_model <span class="ot">&lt;-</span> <span class="cf">function</span>(model_obj, ms_model, meas_fn) {</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    smoTransMatrob <span class="ot">&lt;-</span> model_obj<span class="sc">$</span>tf_loc_id <span class="sc">%&gt;%</span>  </span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(id, rs_start, {{ meas_fn }}) <span class="sc">%&gt;%</span> <span class="fu">add_row</span>(<span class="at">id =</span> <span class="cn">NA</span>,  <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cbind</span>(. ,ms_model<span class="sc">@</span>Fit<span class="sc">@</span>smoProb)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    fault_regime <span class="ot">&lt;-</span> <span class="fu">get_fault_regime</span>(smoTransMatrob, meas_fn)</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">smoTransMatrob =</span> smoTransMatrob,</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>         <span class="at">smoTransMat =</span> ms_model<span class="sc">@</span>Fit<span class="sc">@</span>smoTransMat, </span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>         <span class="at">k =</span> ms_model<span class="sc">@</span>k, </span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>         <span class="at">fault_regime =</span> fault_regime)</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>  model_obj <span class="ot">&lt;-</span> <span class="fu">.create_objects_for_model</span>(tf_loc_id, meas_fn)</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>  ms_model <span class="ot">&lt;-</span> <span class="fu">.create_mm_model</span>(model_obj)</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.process_mm_model</span>(model_obj, ms_model, meas_fn)</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>get_model_status <span class="ot">&lt;-</span> <span class="cf">function</span>(loc_id, </span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>                                  model_code,</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">print_error =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">model =</span> <span class="st">"mm_arm_brkt"</span>,</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">object =</span> <span class="st">"smoTransMatrob"</span>) {</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>  .print_err <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">message =</span> <span class="st">"Error"</span>, <span class="at">print_error =</span> <span class="cn">TRUE</span>){</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (print_error) <span class="fu">print</span>(<span class="fu">str_glue</span>(<span class="st">"{message} in {loc_id}"</span>)) </span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>) </span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>  models_tool <span class="sc">%&gt;%</span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>({{ model }}) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pluck</span>(<span class="dv">1</span>, object) <span class="sc">%||%</span> <span class="fu">.print_err</span>(<span class="at">print_error =</span> print_error)</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>model_status_defs <span class="ot">&lt;-</span> <span class="cf">function</span>(type) {</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>  <span class="cf">switch</span>(type,</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>         <span class="st">"named list"</span> <span class="ot">=</span> <span class="cn">NA</span>, <span class="co"># success</span></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>         <span class="st">"list"</span> <span class="ot">=</span> <span class="cn">NA</span>, <span class="co"># missing in configuration</span></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>         <span class="st">"lgl"</span> <span class="ot">=</span> <span class="st">"Error"</span> <span class="co"># processing error</span></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>get_fault_regime <span class="ot">&lt;-</span> <span class="cf">function</span>(smoTransMatrob, <span class="at">meas_fn =</span> <span class="st">"x"</span> ) {</span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>  regime_corr <span class="ot">&lt;-</span> smoTransMatrob <span class="sc">%&gt;%</span> </span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>({{ meas_fn }}, <span class="st">`</span><span class="at">1</span><span class="st">`</span>, <span class="st">`</span><span class="at">2</span><span class="st">`</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cor</span>(<span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">which.max</span>(regime_corr[<span class="dv">1</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]) </span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>get_model_fails <span class="ot">&lt;-</span> <span class="cf">function</span>(path, loc_id, prob_thres, daysback, model, meas_fn, <span class="at">faults_only =</span> <span class="cn">TRUE</span>) {</span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>  subset_dummy <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (loc_id <span class="cf">in</span> loc_ids) {</span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>    models_tool <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="fu">str_glue</span>(<span class="st">"{path}/models/model_object_{loc_id}.rds"</span>)) </span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>    smoTransMatrob <span class="ot">&lt;-</span> <span class="fu">get_model_status</span>(loc_id,</span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>                                            models_tool,</span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">print_error =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">model =</span> <span class="fu">str_glue</span>(<span class="st">"mm_{model}_{meas_fn}"</span>),</span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">object =</span> <span class="st">"smoTransMatrob"</span>) <span class="sc">%||%</span> <span class="cf">next</span></span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>    fault_regime <span class="ot">&lt;-</span> <span class="fu">get_model_status</span>(loc_id,</span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>                                          models_tool,</span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">print_error =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">model =</span> <span class="fu">str_glue</span>(<span class="st">"mm_{model}_{meas_fn}"</span>),</span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">object =</span> <span class="st">"fault_regime"</span>) <span class="sc">%||%</span> <span class="cf">next</span></span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>    smoTransMatrob <span class="ot">&lt;-</span> smoTransMatrob <span class="sc">%&gt;%</span> </span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">tool_name =</span> loc_id,</span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>             <span class="at">fault_prob =</span><span class="sc">!!</span><span class="fu">as.symbol</span>(fault_regime), </span>
+<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>             <span class="at">fault_prob =</span> <span class="fu">round</span>(fault_prob, <span class="dv">5</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(rs_start <span class="sc">&gt;</span> <span class="fu">Sys.Date</span>() <span class="sc">-</span> daysback)</span>
+<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (faults_only) {</span>
+<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a>      smoTransMatrob <span class="ot">&lt;-</span> smoTransMatrob <span class="sc">%&gt;%</span> <span class="fu">filter</span>(fault_prob <span class="sc">&gt;=</span> {{ prob_thres }})  </span>
+<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a>    subset_dummy[[loc_id]] <span class="ot">&lt;-</span> smoTransMatrob <span class="sc">%&gt;%</span> </span>
+<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(tool_name, id, {{ meas_fn }}, rs_start, fault_prob)</span>
+<span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-120"><a href="#cb3-120" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-121"><a href="#cb3-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(rbind, subset_dummy) <span class="sc">%&gt;%</span> <span class="fu">remove_rownames</span>() </span>
+<span id="cb3-122"><a href="#cb3-122" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="evaluate-fit" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="evaluate-fit"><span class="header-section-number">4.4</span> Evaluate Fit</h2>
 <p><img src="./man/figures/lifecycle-maturing.svg" class="img-fluid"></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>retrieve_model_obj <span class="ot">&lt;-</span> <span class="cf">function</span>(path, loc_id, model, meas_fn) {</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  models_tool <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="fu">str_glue</span>(<span class="st">"{path}/models/model_object_{loc_id}.rds"</span>)) </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  smoTransMatrob <span class="ot">&lt;-</span> <span class="fu">get_model_status</span>(loc_id,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                                          models_tool,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">print_error =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">model =</span> <span class="fu">str_glue</span>(<span class="st">"mm_{model}_{meas_fn}"</span>), </span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">object =</span> <span class="st">"smoTransMatrob"</span>)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  smoTransMat <span class="ot">&lt;-</span> <span class="fu">get_model_status</span>(loc_id,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                                       models_tool, </span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">print_error =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">model =</span> <span class="fu">str_glue</span>(<span class="st">"mm_{model}_{meas_fn}"</span>),</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">object =</span> <span class="st">"smoTransMat"</span>)</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  fault_regime <span class="ot">&lt;-</span> <span class="fu">get_model_status</span>(loc_id,</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                                        models_tool,</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">print_error =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">model =</span> <span class="fu">str_glue</span>(<span class="st">"mm_{model}_{meas_fn}"</span>),</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">object =</span> <span class="st">"fault_regime"</span>)</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  k <span class="ot">&lt;-</span> <span class="fu">get_model_status</span>(loc_id,</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                             models_tool,</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                             <span class="at">print_error =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                             <span class="at">model =</span> <span class="fu">str_glue</span>(<span class="st">"mm_{model}_{meas_fn}"</span>),</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                             <span class="at">object =</span> <span class="st">"k"</span>)</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">smoTransMatrob =</span> smoTransMatrob,</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">smoTransMat =</span> smoTransMat, </span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">k =</span> k, </span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">fault_regime =</span> fault_regime)</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>filter_fault_freq <span class="ot">&lt;-</span> <span class="cf">function</span>(tbl, number_of_fails) {</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  tbl <span class="sc">%&gt;%</span>   </span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">number_of_fails =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(number_of_fails <span class="sc">&gt;=!!</span>number_of_fails) </span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>filter_fault_freq_group <span class="ot">&lt;-</span> <span class="cf">function</span>(tbl, <span class="at">groups =</span> <span class="fu">c</span>(<span class="st">"fac"</span>, <span class="st">"tool_name"</span>), number_of_fails) {</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  tbl <span class="sc">%&gt;%</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(<span class="fu">across</span>(<span class="fu">all_of</span>(groups))) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter_fault_freq</span>(number_of_fails) <span class="sc">%&gt;%</span></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>(<span class="fu">across</span>(<span class="fu">all_of</span>(groups)))</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>retrieve_model_obj <span class="ot">&lt;-</span> <span class="cf">function</span>(path, loc_id, model, meas_fn) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  models_tool <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="fu">str_glue</span>(<span class="st">"{path}/models/model_object_{loc_id}.rds"</span>)) </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  smoTransMatrob <span class="ot">&lt;-</span> <span class="fu">get_model_status</span>(loc_id,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                                          models_tool,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">print_error =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">model =</span> <span class="fu">str_glue</span>(<span class="st">"mm_{model}_{meas_fn}"</span>), </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">object =</span> <span class="st">"smoTransMatrob"</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  smoTransMat <span class="ot">&lt;-</span> <span class="fu">get_model_status</span>(loc_id,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                                       models_tool, </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">print_error =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">model =</span> <span class="fu">str_glue</span>(<span class="st">"mm_{model}_{meas_fn}"</span>),</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">object =</span> <span class="st">"smoTransMat"</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  fault_regime <span class="ot">&lt;-</span> <span class="fu">get_model_status</span>(loc_id,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                                        models_tool,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">print_error =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">model =</span> <span class="fu">str_glue</span>(<span class="st">"mm_{model}_{meas_fn}"</span>),</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">object =</span> <span class="st">"fault_regime"</span>)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  k <span class="ot">&lt;-</span> <span class="fu">get_model_status</span>(loc_id,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>                             models_tool,</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>                             <span class="at">print_error =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                             <span class="at">model =</span> <span class="fu">str_glue</span>(<span class="st">"mm_{model}_{meas_fn}"</span>),</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>                             <span class="at">object =</span> <span class="st">"k"</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">smoTransMatrob =</span> smoTransMatrob,</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">smoTransMat =</span> smoTransMat, </span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">k =</span> k, </span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">fault_regime =</span> fault_regime)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>filter_fault_freq <span class="ot">&lt;-</span> <span class="cf">function</span>(tbl, number_of_fails) {</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  tbl <span class="sc">%&gt;%</span>   </span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">number_of_fails =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(number_of_fails <span class="sc">&gt;=!!</span>number_of_fails) </span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>filter_fault_freq_group <span class="ot">&lt;-</span> <span class="cf">function</span>(tbl, <span class="at">groups =</span> <span class="fu">c</span>(<span class="st">"fac"</span>, <span class="st">"tool_name"</span>), number_of_fails) {</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  tbl <span class="sc">%&gt;%</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(<span class="fu">across</span>(<span class="fu">all_of</span>(groups))) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter_fault_freq</span>(number_of_fails) <span class="sc">%&gt;%</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>(<span class="fu">across</span>(<span class="fu">all_of</span>(groups)))</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="chapman-kolmogorov" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="chapman-kolmogorov"><span class="header-section-number">4.4</span> Chapman-Kolmogorov</h2>
+<section id="chapman-kolmogorov" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="chapman-kolmogorov"><span class="header-section-number">4.5</span> Chapman-Kolmogorov</h2>
 <p><img src="./man/figures/lifecycle-questioning.svg" class="img-fluid"></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>calc_trans_mat <span class="ot">&lt;-</span> <span class="cf">function</span>(path, loc_id, model, meas_fn, <span class="at">t_steps =</span> 1L) {</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  model_obj <span class="ot">&lt;-</span> <span class="fu">retrieve_model_obj</span>(path, loc_id, model, meas_fn)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  smoTransMatrob <span class="ot">&lt;-</span> model_obj<span class="sc">$</span>smoTransMatrob <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="st">`</span><span class="at">1</span><span class="st">`</span>, <span class="st">`</span><span class="at">2</span><span class="st">`</span>) </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  smoTransMat <span class="ot">&lt;-</span> model_obj<span class="sc">$</span>smoTransMat</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  k <span class="ot">&lt;-</span> model_obj<span class="sc">$</span>k</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  fault_regime <span class="ot">&lt;-</span> model_obj<span class="sc">$</span>fault_regime</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  gamma_t_s <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">apply</span>(<span class="fu">matrix</span>(<span class="fu">unlist</span>(smoTransMat),<span class="at">nrow =</span> k<span class="sc">*</span>k),<span class="dv">1</span>,sum)<span class="sc">/</span><span class="fu">rep</span>(<span class="fu">apply</span>(smoTransMatrob[<span class="sc">-</span><span class="dv">1</span>,],<span class="dv">2</span>,sum),<span class="fu">rep</span>(k,k)),<span class="at">ncol =</span> k)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dimnames</span>(gamma_t_s) <span class="ot">&lt;-</span> <span class="cf">switch</span>(fault_regime, <span class="st">"1"</span> <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"Fault"</span>, <span class="st">"Stable"</span>)),<span class="dv">2</span>), <span class="st">"2"</span> <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"Stable"</span>, <span class="st">"Fault"</span>)),<span class="dv">2</span>))</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (t_steps <span class="sc">&lt;=</span> <span class="dv">2</span>) <span class="fu">return</span>(gamma_t_s)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  gamma_t <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">apply</span>(<span class="fu">matrix</span>(<span class="fu">unlist</span>(smoTransMat[<span class="dv">1</span><span class="sc">:</span>t_steps]),<span class="at">nrow =</span> k<span class="sc">*</span>k),<span class="dv">1</span>,sum)<span class="sc">/</span><span class="fu">rep</span>(<span class="fu">apply</span>(<span class="fu">head</span>(smoTransMatrob[<span class="sc">-</span><span class="dv">1</span>,], t_steps),<span class="dv">2</span>,sum),<span class="fu">rep</span>(k,k)),<span class="at">ncol =</span> k)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  gamma_s <span class="ot">&lt;-</span> gamma_t_s <span class="sc">%*%</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(gamma_t)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  gamma_s <span class="ot">&lt;-</span> <span class="fu">abs</span>(<span class="fu">kronecker</span>(gamma_s, k<span class="dv">-1</span>)) <span class="co"># This should hold true for MP invertibility</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  gamma_s <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">t</span>(gamma_s) <span class="sc">/</span> <span class="fu">apply</span>(gamma_s, <span class="dv">2</span>, sum))</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dimnames</span>(gamma_s) <span class="ot">&lt;-</span> <span class="cf">switch</span>(fault_regime, <span class="st">"1"</span> <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"Fault"</span>, <span class="st">"Stable"</span>)),<span class="dv">2</span>), <span class="st">"2"</span> <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"Stable"</span>, <span class="st">"Fault"</span>)),<span class="dv">2</span>))</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  .check_topmap <span class="ot">&lt;-</span> <span class="cf">function</span>(gamma_s) {</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    evec <span class="ot">&lt;-</span> <span class="fu">eigen</span>(gamma_s)<span class="sc">$</span>vectors</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">t</span>(evec[, <span class="dv">1</span>]) <span class="sc">%*%</span> evec[, <span class="dv">2</span>] <span class="sc">&lt;=</span> <span class="fu">abs</span>(evec[, <span class="dv">1</span>]) <span class="sc">%*%</span> <span class="fu">abs</span>(evec[, <span class="dv">2</span>])</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  .check_statdist <span class="ot">&lt;-</span> <span class="cf">function</span>(gamma_x) {</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">dim</span>(gamma_x)[<span class="dv">1</span>]</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    stat_dist <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span>, <span class="dv">1</span>, m) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">diag</span>(<span class="dv">1</span>, m) <span class="sc">-</span> gamma_x <span class="sc">+</span> <span class="fu">matrix</span>(<span class="dv">1</span>, m, m))</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">all.equal</span>(<span class="fu">eigen</span>(gamma_x)<span class="sc">$</span>values, <span class="fu">as.vector</span>(stat_dist)) <span class="sc">&lt;</span> <span class="fu">sqrt</span>(.Machine<span class="sc">$</span>double.eps)</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">.check_topmap</span>(gamma_s) <span class="sc">|</span> <span class="fu">.check_statdist</span>(gamma_s)) <span class="fu">return</span>(gamma_t_s)</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  gamma_s</span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>calc_trans_mat <span class="ot">&lt;-</span> <span class="cf">function</span>(path, loc_id, model, meas_fn, <span class="at">t_steps =</span> 1L) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  model_obj <span class="ot">&lt;-</span> <span class="fu">retrieve_model_obj</span>(path, loc_id, model, meas_fn)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  smoTransMatrob <span class="ot">&lt;-</span> model_obj<span class="sc">$</span>smoTransMatrob <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="st">`</span><span class="at">1</span><span class="st">`</span>, <span class="st">`</span><span class="at">2</span><span class="st">`</span>) </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  smoTransMat <span class="ot">&lt;-</span> model_obj<span class="sc">$</span>smoTransMat</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  k <span class="ot">&lt;-</span> model_obj<span class="sc">$</span>k</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  fault_regime <span class="ot">&lt;-</span> model_obj<span class="sc">$</span>fault_regime</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  gamma_t_s <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">apply</span>(<span class="fu">matrix</span>(<span class="fu">unlist</span>(smoTransMat),<span class="at">nrow =</span> k<span class="sc">*</span>k),<span class="dv">1</span>,sum)<span class="sc">/</span><span class="fu">rep</span>(<span class="fu">apply</span>(smoTransMatrob[<span class="sc">-</span><span class="dv">1</span>,],<span class="dv">2</span>,sum),<span class="fu">rep</span>(k,k)),<span class="at">ncol =</span> k)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dimnames</span>(gamma_t_s) <span class="ot">&lt;-</span> <span class="cf">switch</span>(fault_regime, <span class="st">"1"</span> <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"Fault"</span>, <span class="st">"Stable"</span>)),<span class="dv">2</span>), <span class="st">"2"</span> <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"Stable"</span>, <span class="st">"Fault"</span>)),<span class="dv">2</span>))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (t_steps <span class="sc">&lt;=</span> <span class="dv">2</span>) <span class="fu">return</span>(gamma_t_s)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  gamma_t <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">apply</span>(<span class="fu">matrix</span>(<span class="fu">unlist</span>(smoTransMat[<span class="dv">1</span><span class="sc">:</span>t_steps]),<span class="at">nrow =</span> k<span class="sc">*</span>k),<span class="dv">1</span>,sum)<span class="sc">/</span><span class="fu">rep</span>(<span class="fu">apply</span>(<span class="fu">head</span>(smoTransMatrob[<span class="sc">-</span><span class="dv">1</span>,], t_steps),<span class="dv">2</span>,sum),<span class="fu">rep</span>(k,k)),<span class="at">ncol =</span> k)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  gamma_s <span class="ot">&lt;-</span> gamma_t_s <span class="sc">%*%</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(gamma_t)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  gamma_s <span class="ot">&lt;-</span> <span class="fu">abs</span>(<span class="fu">kronecker</span>(gamma_s, k<span class="dv">-1</span>)) <span class="co"># This should hold true for MP invertibility</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  gamma_s <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">t</span>(gamma_s) <span class="sc">/</span> <span class="fu">apply</span>(gamma_s, <span class="dv">2</span>, sum))</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dimnames</span>(gamma_s) <span class="ot">&lt;-</span> <span class="cf">switch</span>(fault_regime, <span class="st">"1"</span> <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"Fault"</span>, <span class="st">"Stable"</span>)),<span class="dv">2</span>), <span class="st">"2"</span> <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"Stable"</span>, <span class="st">"Fault"</span>)),<span class="dv">2</span>))</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  .check_topmap <span class="ot">&lt;-</span> <span class="cf">function</span>(gamma_s) {</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    evec <span class="ot">&lt;-</span> <span class="fu">eigen</span>(gamma_s)<span class="sc">$</span>vectors</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">t</span>(evec[, <span class="dv">1</span>]) <span class="sc">%*%</span> evec[, <span class="dv">2</span>] <span class="sc">&lt;=</span> <span class="fu">abs</span>(evec[, <span class="dv">1</span>]) <span class="sc">%*%</span> <span class="fu">abs</span>(evec[, <span class="dv">2</span>])</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  .check_statdist <span class="ot">&lt;-</span> <span class="cf">function</span>(gamma_x) {</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">dim</span>(gamma_x)[<span class="dv">1</span>]</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    stat_dist <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span>, <span class="dv">1</span>, m) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">diag</span>(<span class="dv">1</span>, m) <span class="sc">-</span> gamma_x <span class="sc">+</span> <span class="fu">matrix</span>(<span class="dv">1</span>, m, m))</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">all.equal</span>(<span class="fu">eigen</span>(gamma_x)<span class="sc">$</span>values, <span class="fu">as.vector</span>(stat_dist)) <span class="sc">&lt;</span> <span class="fu">sqrt</span>(.Machine<span class="sc">$</span>double.eps)</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">.check_topmap</span>(gamma_s) <span class="sc">|</span> <span class="fu">.check_statdist</span>(gamma_s)) <span class="fu">return</span>(gamma_t_s)</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  gamma_s</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

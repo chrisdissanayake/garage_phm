@@ -8,17 +8,65 @@ source("_common.R")
 library(patchwork)
 ```
 
-## ADXL335
+## System Configuration
+
+![](./man/figures/lifecycle-experimental.svg)
+
+![ ](./images_for_document/ptype.jpg){width="49.7%" fig-align="center"}
+
+
+```{mermaid}
+graph TB
+A(Accelerometer)-->AA 
+
+subgraph Future-Replace
+AA[Arduino]-->E[Thin Client]
+style Future-Replace fill:#f0f0f0,stroke:grey,stroke-width:2px
+end
+
+E-->F[AWS RDS]
+F-->FF[Decisions / Notifications]
+F-->G("Dashboard </br>(Metrics, Sensor Data,  Decisions)")
+FF-.->G
+GD(Garage Door) -.-> A
+style G fill:#B6E6E6
+style GD fill:salmon 
+style E stroke:blue,stroke-width:3px
+
+subgraph Thin-Client
+BB((Every </br> 2 Hours))-->CA[Gather Data]
+BB-->CAA[Preprocess]
+CAA-->CAAB{Door Activity?}
+CAAB--Yes-->CBB[Run Models]
+CAAB--No-->CAAC(End)
+CBB-->CB[Data / Results]
+style BB fill:salmon 
+style Thin-Client fill:#f0f0f0,stroke:blue,stroke-width:3px
+end
+
+```
+
+
+## Installation
+
+### Thin Client
+![](./man/figures/lifecycle-experimental.svg)
+
+### ADXL335 to Arduino
+![](./man/figures/lifecycle-experimental.svg)
 
 The ADXL335 is a triaxial accelerometer with three analog outputs that correspond to the orthogonal X, Y, and Z axes. The accelerometer responds to [tilt](https://www.digikey.com/en/articles/using-an-accelerometer-for-inclination-sensing){target="_blank"}, and since it is mounted in parallel to the door (reference), this measurement translates to a dynamic angle of incline. 
 
 The technical datasheet for ADXL335 is [here](https://www.analog.com/media/en/technical-documentation/data-sheets/ADXL335.pdf).
 
-## Preliminary Calibration
+The accelerometer is connected to the Arduino following the instructions available [here](https://learn.adafruit.com/adafruit-analog-accelerometer-breakouts/arduino-wiring).
+
+
+### Preliminary Calibration
 
 ![](./man/figures/lifecycle-stable.svg)
 
-The calibration procedure is highlighted [here](https://learn.adafruit.com/adxl345-digital-accelerometer/programming){target="_blank"}. This also serves the purpose of verifying the functionality of the accelerometer.
+The calibration procedure is explained [here](https://learn.adafruit.com/adxl345-digital-accelerometer/programming){target="_blank"}. This also serves as a secondary purpose of verifying the functionality of the accelerometer.
 
 
 ```{cpp eval = FALSE}
@@ -91,12 +139,6 @@ double tilt_fc, tilt_tw;
 }
 ```
 
-## Installation
-
-### Thin Client
-
-### Arduino
-
 ### Install Adjustable Mount
 
 The accelerometer mount should be installed closer to the arm bracket, the closer the better. 
@@ -109,8 +151,19 @@ The accelerometer mount should be installed closer to the arm bracket, the close
 </div>
 
 
+## Definition of a Cycle
+
+A complete sequence of opening and closing the garage door, including the upward and downward movements, starting from the closed position to fully open and then back to the closed position.
+
+Here is my garage door opening and closing, showing one complete cycle:
+
+{{< video https://www.youtube.com/embed/APYvsNZTHsQ >}}
+
+For testing purposes, there will be an initial delay, idle on top, and ending delay, all five seconds.
+
 ## Tilt Orientation Adjustment
 ![](./man/figures/lifecycle-stable.svg)
+
 The accelerometer mount is adjustable, and the reference tilt angle (`tilt_fc`, above) can be adjusted by loosening the M3 screws. 
 
 The door moves relative to the left and right tracks, and this can cause problems to the "Track" failure model if the accelerometer is not positioned correctly. Here are three outputs for three angles, -17 deg (CCW), 0 deg, and 17 deg (CW). 
@@ -141,13 +194,13 @@ gridExtra::grid.arrange(gt, left = "Acceleration (g)", bottom = "time (s)")
 
 ```
 
-It is impossible to see any difference between these signals other than for x. Fixing x to the 0g position is not ideal because that is not how the tracks and door are positioned.
+It is hard to see any difference between these signals other than for x. Fixing x to an initial 0g position is not optimal because the door moves relative to the track positions. There is no guarantee that the door movement is "flat" against the ground. 
 
 ### Mutual Infrmation
 
-The following procedure is a solution to this problem by to exploiting the nonlinear dependence between sensor variables, namely x-y and x-z. The solution also works without any preprocessing, which is also an advantage. 
+The following procedure adresses this problem by to exploiting the nonlinear dependence between sensor variables, namely x-y and x-z. The solution also works well with raw data, which is an advantage. 
 
-Below is an example calculation for the mutual information between x and y for the signal at 0 degrees. A lower value indicates better "alignment".
+Below is an example calculation for the mutual information between x and y for the signal at 0 degrees. A lower value indicates better "alignment" of the accelerometer.
 
 ```{r}
 d <- pre_proc_tbl("2023-06-10_garagedoor-1") 
@@ -201,7 +254,7 @@ d
 
 ![](./man/figures/lifecycle-maturing.svg)
 
-To determine the most optimal angle, a sweep needs to be done at varying increments. Typically, this is done within a range of approximately ±10 degrees from zero.
+To determine the optimal angle, a sweep needs to be done at varying increments. Typically, this is done within a range of approximately ±10 degrees from zero.
 
 ```{r}
 d_long <- read_csv("../data/mu-i_angle_swp.csv") %>%
@@ -233,7 +286,7 @@ d_long |>
 
 ```
 
-The curve typically follows a hinge function. In our example, it may not be appropriate to select the zero degree position, and it is recommended to re-measure the top three angles. For this instance, the sensor was positioned at a five-degree clockwise (CW) offset.
+The curve follows a hinge function. It is recommended to re-measure at the lowest three positions. In this instance, the sensor was positioned at a five-degree CW offset.
 
 
 

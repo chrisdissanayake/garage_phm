@@ -48,7 +48,7 @@ tbl <- DBI::dbGetQuery(
 tbl |> pull(table_name) |> cat(sep = ", ")
 ```
 
-### Get Data
+### Query Data
 
 
 ```{r}
@@ -98,7 +98,7 @@ tbl |> head(10)
 
 ```{r}
 tbl |> 
-  filter(meas_date < as.Date("2023-06-11")) |> 
+  filter(meas_date < as.Date("2023-06-11")) |> # to reproduce the landing page
   mutate(model = ifelse(model == "arm_brkt", "Arm Bracket Fault", model)) |> 
   ggplot(aes(meas_date, prob_max, col = model_version)) +
   geom_point() +
@@ -114,7 +114,7 @@ tbl |>
 
 ### Important! 
 
-Please close the connection after querying. 
+Please close the connection after you are done. 
 
 ```{r}
 dbDisconnect(con)
