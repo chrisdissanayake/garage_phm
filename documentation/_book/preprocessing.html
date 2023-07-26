@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./model_arm_brkt.html" rel="next">
+<link href="./fault_diagnostics.html" rel="next">
 <link href="./calibration.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -161,8 +161,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./model_arm_brkt.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Arm Bracket Fault Detection</span></span></a>
+  <a href="./fault_diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fault Diagnostics</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -201,7 +201,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#grenerate-virtual-recipe-steps" id="toc-grenerate-virtual-recipe-steps" class="nav-link" data-scroll-target="#grenerate-virtual-recipe-steps"><span class="header-section-number">3.3</span> Grenerate Virtual Recipe Steps</a>
   <ul class="collapse">
-  <li><a href="#extract-torsion-coil-response" id="toc-extract-torsion-coil-response" class="nav-link" data-scroll-target="#extract-torsion-coil-response"><span class="header-section-number">3.3.1</span> Extract Torsion Coil Response</a></li>
+  <li><a href="#extract-turn-response" id="toc-extract-turn-response" class="nav-link" data-scroll-target="#extract-turn-response"><span class="header-section-number">3.3.1</span> Extract Turn Response</a></li>
   <li><a href="#extract-door-idle-response" id="toc-extract-door-idle-response" class="nav-link" data-scroll-target="#extract-door-idle-response"><span class="header-section-number">3.3.2</span> Extract Door Idle Response</a></li>
   </ul></li>
   <li><a href="#final-results" id="toc-final-results" class="nav-link" data-scroll-target="#final-results"><span class="header-section-number">3.4</span> Final Results</a></li>
@@ -297,11 +297,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="grenerate-virtual-recipe-steps" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="grenerate-virtual-recipe-steps"><span class="header-section-number">3.3</span> Grenerate Virtual Recipe Steps</h2>
 <p><img src="./man/figures/lifecycle-maturing.svg" class="img-fluid"></p>
-<p>The following is an automated procedure that cleans and segments the signal into idle, torsion coil, and impulse responses.</p>
-<section id="extract-torsion-coil-response" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="extract-torsion-coil-response"><span class="header-section-number">3.3.1</span> Extract Torsion Coil Response</h3>
+<p>The following is an automated procedure that cleans and segments the signal into idle, turn, and impulse responses.</p>
+<section id="extract-turn-response" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="extract-turn-response"><span class="header-section-number">3.3.1</span> Extract Turn Response</h3>
 <p><img src="./man/figures/lifecycle-stable.svg" class="img-fluid"></p>
-<p>The first step is to smooth the signal, and a machine learning method is used to isolate the torsion coil unwinding and winding scenarios.</p>
+<p>The first step is to smooth the signal, and a machine learning method is used to isolate the accelerometer response around a turn.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">z_smo =</span> <span class="fu">loess</span>(z <span class="sc">~</span> time, <span class="at">span =</span> <span class="fl">0.1</span>)<span class="sc">$</span>fitted, </span>
@@ -427,9 +427,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Legend definitions:</p>
 <ul>
-<li>0 = horizontal or vertical position</li>
-<li>-1 = torsion coil winding</li>
-<li>1 = torsion coil unwinding</li>
+<li>0: Horizontal or vertical position</li>
+<li>-1: Turn, coming down</li>
+<li>1: Turn, going up</li>
 </ul>
 </section>
 <section id="extract-door-idle-response" class="level3" data-number="3.3.2">
@@ -478,7 +478,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="preprocessing_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
-<p>The unwinding the torsion coil (pink, door going up) generates a distinct signature compared to the opposite direction (green, door coming down).</p>
+<p>The sensor position around the turn (pink, door going up) has a distinct signature compared to the opposite (green, door coming down).</p>
 <p>The shape of the signal comes from the rate of tilt around the turn, denoted by ((t)), and can be expressed by a the following first order differential equation:</p>
 <p><span class="math display">\[
 \frac{d\theta}{dt} = f(\theta, G, t),
@@ -736,8 +736,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./model_arm_brkt.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Arm Bracket Fault Detection</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./fault_diagnostics.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fault Diagnostics</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

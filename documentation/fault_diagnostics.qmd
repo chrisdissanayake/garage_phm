@@ -1,4 +1,4 @@
-# Arm Bracket Fault Detection
+# Fault Diagnostics
 
 ```{r}
 #| results: "asis"
@@ -11,7 +11,6 @@ source("_common.R")
 
 ```{r}
 library(dissthispkgr)
-
 
 
 ```
@@ -49,8 +48,12 @@ imf_ener <- function(tbl, meas_fn = "x") {
 }
 ```
 
-## Fit HMM
-![](./man/figures/lifecycle-stable.svg)
+## LSTM AE
+![](./man/figures/lifecycle-maturing.svg)
+
+
+## HMM
+![](./man/figures/lifecycle-deprecated.svg)
 
 ```{r}
 get_mm_results <- function(tf_loc_id, meas_fn) {
@@ -177,8 +180,8 @@ get_model_fails <- function(path, loc_id, prob_thres, daysback, model, meas_fn, 
 }
 ```
 
-## Evaluate Fit
-![](./man/figures/lifecycle-maturing.svg)
+## Evaluate HMM Fit
+![](./man/figures/lifecycle-deprecated.svg)
 
 ```{r}
 retrieve_model_obj <- function(path, loc_id, model, meas_fn) {
@@ -228,9 +231,9 @@ filter_fault_freq_group <- function(tbl, groups = c("fac", "tool_name"), number_
 ```
 
 
-## Chapman-Kolmogorov 
+## Chapman-Kolmogorov Adjustments
 
-![](./man/figures/lifecycle-questioning.svg)
+![](./man/figures/lifecycle-deprecated.svg)
 
 ```{r}
 calc_trans_mat <- function(path, loc_id, model, meas_fn, t_steps = 1L) {
@@ -249,23 +252,18 @@ calc_trans_mat <- function(path, loc_id, model, meas_fn, t_steps = 1L) {
   gamma_t <- matrix(apply(matrix(unlist(smoTransMat[1:t_steps]),nrow = k*k),1,sum)/rep(apply(head(smoTransMatrob[-1,], t_steps),2,sum),rep(k,k)),ncol = k)
   
   gamma_s <- gamma_t_s %*% MASS::ginv(gamma_t)
-  gamma_s <- abs(kronecker(gamma_s, k-1)) # This should hold true for MP invertibility
+  gamma_s <- abs(kronecker(gamma_s, k - 1)) # true for MP invertibility
   gamma_s <- t(t(gamma_s) / apply(gamma_s, 2, sum))
   dimnames(gamma_s) <- switch(fault_regime, "1" = rep(list(c("Fault", "Stable")),2), "2" = rep(list(c("Stable", "Fault")),2))
   
-  .check_topmap <- function(gamma_s) {
-    evec <- eigen(gamma_s)$vectors
-    t(evec[, 1]) %*% evec[, 2] <= abs(evec[, 1]) %*% abs(evec[, 2])
-  }
-  
-  .check_statdist <- function(gamma_x) {
+  .check_statdist <- function(gamma_x) { # check stationarity
     m <- dim(gamma_x)[1]
     stat_dist <- matrix(1, 1, m) %*% solve(diag(1, m) - gamma_x + matrix(1, m, m))
     
     all.equal(eigen(gamma_x)$values, as.vector(stat_dist)) < sqrt(.Machine$double.eps)
   }
   
-  if (!.check_topmap(gamma_s) | .check_statdist(gamma_s)) return(gamma_t_s)
+  if (.check_statdist(gamma_s)) return(gamma_t_s)
   
   gamma_s
 }

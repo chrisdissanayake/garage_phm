@@ -74,13 +74,13 @@ Note that this process removes some information, and it is not the signal that i
 
 ![](./man/figures/lifecycle-maturing.svg)
 
-The following is an automated procedure that cleans and segments the signal into idle, torsion coil, and impulse responses. 
+The following is an automated procedure that cleans and segments the signal into idle, turn, and impulse responses. 
 
-### Extract Torsion Coil Response
+### Extract Turn Response
 
 ![](./man/figures/lifecycle-stable.svg)
 
-The first step is to smooth the signal, and a machine learning method is used to isolate the torsion coil unwinding and winding scenarios. 
+The first step is to smooth the signal, and a machine learning method is used to isolate the accelerometer response around a turn. 
 
 
 ```{r}
@@ -206,9 +206,9 @@ d_fmerg |>
 
 Legend definitions:
 
-- 0 =  horizontal or vertical position
-- -1 =  torsion coil winding 
-- 1 = torsion coil unwinding
+- 0: Horizontal or vertical position
+- -1: Turn, coming down
+- 1: Turn, going up
 
 
 ### Extract Door Idle Response
@@ -256,7 +256,7 @@ d_fmerg_final |>
        col = "Recipe Step")
 ```
 
-The unwinding the torsion coil (pink, door going up) generates a distinct signature compared to the opposite direction (green, door coming down).
+The sensor position around the turn (pink, door going up) has a distinct signature compared to the opposite (green, door coming down). 
 
 The shape of the signal comes from the rate of tilt around the turn, denoted by \(\theta(t)\), and can be expressed by a the following first order differential equation:
 

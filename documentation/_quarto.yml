@@ -13,7 +13,7 @@ book:
     - bom.qmd
     - calibration.qmd
     - preprocessing.qmd
-    - model_arm_brkt.qmd
+    - fault_diagnostics.qmd
     - datacollection.qmd
     - maintenance_tracking.qmd
     - references.qmd
