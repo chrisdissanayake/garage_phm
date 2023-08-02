@@ -74,7 +74,7 @@
     "href": "index.html",
     "title": "Garage Door Prognostics and Health Management",
     "section": "",
-    "text": "Introduction\nWelcome to the work in progress documentation for the “Garage Door PHM” project.\nObjectives:\nThis is currently not the top priority for me. There are many other tasks that take precedence frequently.\nThat being said, this will continue to evolve in between many changes I make for both hardware and software. I plan on spending a few hours every week here, which I think would ultimately benefit the project."
+    "text": "Introduction\nWelcome to the work in progress documentation for the “Garage Door PHM” project.\nPurpose:\nThis is currently not the top priority for me. There are many other tasks that take precedence frequently.\nThat being said, this will continue to evolve in between many changes I make for both hardware and software. I plan on spending a few hours every week here, which I think would ultimately benefit the project."
   },
   {
     "objectID": "index.html#note-on-code-folding",

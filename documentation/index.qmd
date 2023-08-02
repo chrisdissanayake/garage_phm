@@ -10,7 +10,7 @@ library(reticulate)
 
 Welcome to the [work in progress]{style="color: red"} documentation for the “Garage Door PHM” project.
 
-**Objectives:**
+**Purpose:**
 
 1. Improve understanding of the product, system, and codebase: Efficiently make changes when I get things wrong.
 
